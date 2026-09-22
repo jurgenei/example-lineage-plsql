@@ -28,10 +28,6 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
-    environment 'DOCKER_API_VERSION', '1.41'
-    environment 'DOCKER_HOST', 'unix:///var/run/docker.sock'
-    environment 'TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE', '/var/run/docker.sock'
-    environment 'TESTCONTAINERS_DOCKER_CLIENT_STRATEGY', 'org.testcontainers.dockerclient.EnvironmentAndSystemPropertyClientProviderStrategy'
 }
 
 jacoco {
