@@ -23,7 +23,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Run tests with coverage
-        run: ./gradlew --no-daemon test jacocoTestReport
+        run: ./gradlew --no-daemon :application:test :application:jacocoTestReport
 
       - name: Upload coverage reports artifact
         if: always()
@@ -31,12 +31,12 @@ jobs:
         with:
           name: coverage-reports
           path: |
-            build/reports/jacoco/test/**
-            build/reports/tests/test/**
-            build/test-results/test/**
+            2-application/build/reports/jacoco/test/**
+            2-application/build/reports/tests/test/**
+            2-application/build/test-results/test/**
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
-          files: ./build/reports/jacoco/test/jacocoTestReport.xml
+          files: ./2-application/build/reports/jacoco/test/jacocoTestReport.xml
           fail_ci_if_error: false
