@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd">
+
+    <changeSet id="009-create-load-procedure" author="copilot" runOnChange="true">
+        <sql splitStatements="false" endDelimiter="/">
+            <![CDATA[
+create or replace procedure load_customer_lineage
+as
+begin
+
+    insert into valid_customer (
+        valid_customer_sk,
+        customer_id,
+        customer_name,
+        city,
+        annual_revenue,
+        credit_rating,
+        risk_segment,
+        customer_status,
+        load_ts
+    )
+    select
+        valid_customer_seq.nextval,
+        r.customer_id,
+        r.customer_name,
+        r.city,
+        r.annual_revenue,
+        ref.credit_rating,
+        ref.risk_segment,
+        case
+            when ref.customer_id is null then 'UNMATCHED'
+            when ref.credit_rating in ('AAA','BBB') then 'ACTIVE'
+            else 'REVIEW'
+        end,
+        systimestamp
+    from raw_customer r
+    left join customer_reference ref
+        on r.customer_id = ref.customer_id;
+
+    insert into merged_customer (
+        merged_customer_sk,
+        valid_customer_sk,
+        customer_id,
+        customer_name,
+        credit_rating,
+        risk_segment,
+        load_ts
+    )
+    select
+        merged_customer_seq.nextval,
+        vc.valid_customer_sk,
+        vc.customer_id,
+        vc.customer_name,
+        vc.credit_rating,
+        vc.risk_segment,
+        systimestamp
+    from valid_customer vc;
+
+    commit;
+
+end;
+/
+            ]]>
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>
