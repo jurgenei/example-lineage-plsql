@@ -1,5 +1,50 @@
 plugins {
-    id 'base'
+    id 'java'
+    id 'jacoco'
+    id 'org.springframework.boot' version '3.3.4'
+    id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.liquibase:liquibase-core'
+
+    runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.testcontainers:junit-jupiter:1.21.4'
+    testImplementation 'org.testcontainers:oracle-xe:1.21.4'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+    environment 'DOCKER_API_VERSION', '1.41'
+    environment 'DOCKER_HOST', 'unix:///var/run/docker.sock'
+    environment 'TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE', '/var/run/docker.sock'
+    environment 'TESTCONTAINERS_DOCKER_CLIENT_STRATEGY', 'org.testcontainers.dockerclient.EnvironmentAndSystemPropertyClientProviderStrategy'
+}
+
+jacoco {
+    toolVersion = '0.8.12'
+}
+
+tasks.named('jacocoTestReport') {
+    dependsOn tasks.named('test')
+    reports {
+        xml.required = true
+        html.required = true
+        csv.required = false
+    }
 }
 
 tasks.register('prepareApplicationAssets') {

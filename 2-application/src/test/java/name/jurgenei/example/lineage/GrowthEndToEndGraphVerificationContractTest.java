@@ -11,7 +11,8 @@ class GrowthEndToEndGraphVerificationContractTest {
 
     @Test
     void shouldDeclareExpectedLineageEdgesForGraphVerification() throws Exception {
-        String neo4jBuild = Files.readString(Path.of("4-neo4j", "build.gradle"), StandardCharsets.UTF_8);
+        Path root = ProjectRootPaths.root();
+        String neo4jBuild = Files.readString(root.resolve(Path.of("4-neo4j", "build.gradle")), StandardCharsets.UTF_8);
         assertThat(neo4jBuild).contains("CUSTOMER_REFERENCE->VALID_CUSTOMER");
         assertThat(neo4jBuild).contains("RAW_CUSTOMER->VALID_CUSTOMER");
         assertThat(neo4jBuild).contains("VALID_CUSTOMER->MERGED_CUSTOMER");
@@ -20,7 +21,8 @@ class GrowthEndToEndGraphVerificationContractTest {
 
     @Test
     void shouldRequirePassStatusInRootGraphVerification() throws Exception {
-        String rootBuild = Files.readString(Path.of("build.gradle"), StandardCharsets.UTF_8);
+        Path root = ProjectRootPaths.root();
+        String rootBuild = Files.readString(root.resolve("build.gradle"), StandardCharsets.UTF_8);
         assertThat(rootBuild).contains("verificationJson.contains('\"status\": \"pass\"')");
         assertThat(rootBuild).contains("tasks.register('endToEndTest')");
     }
