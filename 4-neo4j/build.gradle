@@ -5,12 +5,12 @@ plugins {
 tasks.register('verifyKnowledgeGraphModel') {
     group = 'lineage'
     description = 'Loads and verifies stitched graph model in Neo4j.'
-    dependsOn(':archimate:assembleArchitectureModel', ':lineage:generateTableLineage')
+    dependsOn(':architecture:assembleArchitectureModel', ':lineage:generateTableLineage')
     def outputDir = layout.buildDirectory.dir('graph-report')
     outputs.dir(outputDir)
     doLast {
         def lineageCsv = project(':lineage').layout.buildDirectory.file('lineage/table-lineage.csv').get().asFile
-        def relationshipsXml = project(':archimate').layout.buildDirectory.file('archimate-export/relationships.xml').get().asFile
+        def relationshipsXml = project(':architecture').layout.buildDirectory.file('archimate-export/relationships.xml').get().asFile
         if (!lineageCsv.exists()) {
             throw new GradleException("Lineage CSV missing: ${lineageCsv}")
         }

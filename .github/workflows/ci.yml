@@ -25,9 +25,9 @@ jobs:
       - name: Run structure and contract tests
         run: >
           ./gradlew --no-daemon test
-          --tests com.example.lineage.GrowthStructureBootstrapTest
-          --tests com.example.lineage.GrowthCrossModuleContractTest
-          --tests com.example.lineage.GrowthEndToEndGraphVerificationContractTest
+          --tests name.jurgenei.example.lineage.GrowthStructureBootstrapTest
+          --tests name.jurgenei.example.lineage.GrowthCrossModuleContractTest
+          --tests name.jurgenei.example.lineage.GrowthEndToEndGraphVerificationContractTest
 
       - name: Upload structure/contract test reports
         if: always()
@@ -70,8 +70,8 @@ jobs:
         with:
           name: lineage-artifacts
           path: |
-            application/build/plsql-assets/**
-            lineage/build/lineage/**
+            2-application/build/plsql-assets/**
+            3-lineage/build/lineage/**
             build/reports/lineage-report.html
 
   graph-tests:
@@ -106,7 +106,7 @@ jobs:
         with:
           name: graph-artifacts
           path: |
-            neo4j/build/graph-report/**
+            4-neo4j/build/graph-report/**
             build/reports/graph-load-report.html
             build/reports/graph-report.html
 
@@ -137,7 +137,7 @@ jobs:
         run: ./gradlew --no-daemon endToEndTest
 
       - name: Run Oracle lineage integration test
-        run: ./gradlew --no-daemon test --tests com.example.lineage.LineageLoaderIntegrationTest
+        run: ./gradlew --no-daemon test --tests name.jurgenei.example.lineage.LineageLoaderIntegrationTest
 
       - name: Upload end-to-end artifacts
         if: always()

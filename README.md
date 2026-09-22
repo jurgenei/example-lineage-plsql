@@ -16,10 +16,10 @@ Architecture-driven lineage reference project. Repository grows as multi-project
 
 ```text
 example-lineage-plsql
-├── application/  # PL/SQL assets under analysis
-├── archimate/    # architecture intent exports
-├── lineage/      # discovered lineage artifacts
-├── neo4j/        # graph verification logic/report
+├── 1-architecture/ # architecture intent exports
+├── 2-application/  # PL/SQL assets under analysis
+├── 3-lineage/      # discovered lineage artifacts
+├── 4-neo4j/        # graph verification logic/report
 ├── src/main/...  # Spring Boot test application
 ├── src/test/...  # bootstrap/contract/e2e contract tests
 └── .github/workflows/ci.yml
@@ -62,15 +62,15 @@ Generated root reports:
 Run staged growth tests:
 
 ```bash
-./gradlew test --tests com.example.lineage.GrowthStructureBootstrapTest
-./gradlew test --tests com.example.lineage.GrowthCrossModuleContractTest
-./gradlew test --tests com.example.lineage.GrowthEndToEndGraphVerificationContractTest
+./gradlew test --tests name.jurgenei.example.lineage.GrowthStructureBootstrapTest
+./gradlew test --tests name.jurgenei.example.lineage.GrowthCrossModuleContractTest
+./gradlew test --tests name.jurgenei.example.lineage.GrowthEndToEndGraphVerificationContractTest
 ```
 
 Run Oracle integration test:
 
 ```bash
-./gradlew test --tests com.example.lineage.LineageLoaderIntegrationTest
+./gradlew test --tests name.jurgenei.example.lineage.LineageLoaderIntegrationTest
 ```
 
 Run full local flow:

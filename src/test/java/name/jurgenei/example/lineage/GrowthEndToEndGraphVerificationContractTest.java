@@ -1,4 +1,4 @@
-package com.example.lineage;
+package name.jurgenei.example.lineage;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -11,7 +11,7 @@ class GrowthEndToEndGraphVerificationContractTest {
 
     @Test
     void shouldDeclareExpectedLineageEdgesForGraphVerification() throws Exception {
-        String neo4jBuild = Files.readString(Path.of("neo4j", "build.gradle"), StandardCharsets.UTF_8);
+        String neo4jBuild = Files.readString(Path.of("4-neo4j", "build.gradle"), StandardCharsets.UTF_8);
         assertThat(neo4jBuild).contains("CUSTOMER_REFERENCE->VALID_CUSTOMER");
         assertThat(neo4jBuild).contains("RAW_CUSTOMER->VALID_CUSTOMER");
         assertThat(neo4jBuild).contains("VALID_CUSTOMER->MERGED_CUSTOMER");

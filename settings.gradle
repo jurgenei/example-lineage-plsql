@@ -1,6 +1,11 @@
 rootProject.name = 'example-lineage-plsql'
 
+include 'architecture'
 include 'application'
-include 'archimate'
 include 'lineage'
 include 'neo4j'
+
+project(':architecture').projectDir = file('1-architecture')
+project(':application').projectDir = file('2-application')
+project(':lineage').projectDir = file('3-lineage')
+project(':neo4j').projectDir = file('4-neo4j')

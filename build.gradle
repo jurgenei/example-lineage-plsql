@@ -58,11 +58,11 @@ def writeReport = { String fileName, String title, List<String> lines ->
 
 tasks.register('assembleArchitecture') {
     group = 'lineage'
-    description = 'Assembles architecture artifacts from archimate project.'
-    dependsOn(':archimate:assembleArchitectureModel')
+    description = 'Assembles architecture artifacts from architecture project.'
+    dependsOn(':architecture:assembleArchitectureModel')
     outputs.file(reportsDir.map { it.file('architecture-report.html') })
     doLast {
-        def exportDir = project(':archimate').layout.buildDirectory.dir('archimate-export').get().asFile
+        def exportDir = project(':architecture').layout.buildDirectory.dir('archimate-export').get().asFile
         requireFiles([
                 new File(exportDir, 'application-components.xml'),
                 new File(exportDir, 'stored-procedures.xml'),

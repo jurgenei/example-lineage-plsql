@@ -1,4 +1,4 @@
-package com.example.lineage;
+package name.jurgenei.example.lineage;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
