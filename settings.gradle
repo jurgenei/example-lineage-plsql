@@ -1,1 +1,6 @@
 rootProject.name = 'example-lineage-plsql'
+
+include 'application'
+include 'archimate'
+include 'lineage'
+include 'neo4j'

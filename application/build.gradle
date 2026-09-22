@@ -1,0 +1,16 @@
+plugins {
+    id 'base'
+}
+
+tasks.register('prepareApplicationAssets') {
+    group = 'lineage'
+    description = 'Prepares PL/SQL assets for downstream lineage processing.'
+    def outputDir = layout.buildDirectory.dir('plsql-assets')
+    outputs.dir(outputDir)
+    doLast {
+        def dir = outputDir.get().asFile
+        dir.mkdirs()
+        def artifact = new File(dir, 'application-assets.txt')
+        artifact.text = 'load_customer_lineage.sql'
+    }
+}
