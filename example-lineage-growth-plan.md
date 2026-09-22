@@ -103,10 +103,10 @@ gradle-python-plugin
 Outputs:
 
 ```text
-application-components.xml
-stored-procedures.xml
-relationships.xml
-archimate-export.json
+test-lineage.export.xml
+test-lineage.xml
+test-lineage.xlsx
+pdf/*.pdf
 ```
 
 Purpose:

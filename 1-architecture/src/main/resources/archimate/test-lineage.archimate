@@ -10,7 +10,7 @@ Application to test linage functionality
 
 ```xml
 &lt;app>
-        &lt;database name=&quot;sdp&quot;>
+        &lt;database name=&quot;test&quot;>
             &lt;calls>
                 &lt;call name=&quot;load_customer_lineage&quot;/>
             &lt;/calls>
@@ -27,7 +27,7 @@ Application to test linage functionality
   <folder name="Views" id="id-b34d887d05fd4ca7a1269a5532582014" type="diagrams">
     <element xsi:type="archimate:ArchimateDiagramModel" name="DemoView" id="id-18a9ded5d26b4e16b7e8a09f328ded7d">
       <child xsi:type="archimate:DiagramObject" id="id-6bcb7c22958a42c09afdc784c3d783f8" archimateElement="id-460abab375434254839a5d435c815e78">
-        <bounds x="422" y="209" width="120" height="55"/>
+        <bounds x="84" y="60" width="120" height="55"/>
       </child>
     </element>
   </folder>

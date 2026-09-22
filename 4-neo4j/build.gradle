@@ -10,12 +10,12 @@ tasks.register('verifyKnowledgeGraphModel') {
     outputs.dir(outputDir)
     doLast {
         def lineageCsv = project(':lineage').layout.buildDirectory.file('lineage/table-lineage.csv').get().asFile
-        def relationshipsXml = project(':architecture').layout.buildDirectory.file('archimate-export/relationships.xml').get().asFile
+        def archiExportXml = project(':architecture').layout.buildDirectory.file('archi-export/test-lineage.xml').get().asFile
         if (!lineageCsv.exists()) {
             throw new GradleException("Lineage CSV missing: ${lineageCsv}")
         }
-        if (!relationshipsXml.exists()) {
-            throw new GradleException("Architecture relationships missing: ${relationshipsXml}")
+        if (!archiExportXml.exists()) {
+            throw new GradleException("Architecture export XML missing: ${archiExportXml}")
         }
 
         def discoveredEdges = [] as Set
@@ -40,9 +40,9 @@ tasks.register('verifyKnowledgeGraphModel') {
             throw new GradleException("Knowledge graph verification failed. Missing lineage edges: ${missingEdges}")
         }
 
-        def relationshipContent = relationshipsXml.text
-        if (!relationshipContent.contains('source="PreProcessor"') || !relationshipContent.contains('target="LOAD_CUSTOMER_LINEAGE"')) {
-            throw new GradleException('Knowledge graph verification failed. Missing PreProcessor -> LOAD_CUSTOMER_LINEAGE relationship.')
+        def architectureContent = archiExportXml.text.toLowerCase(java.util.Locale.ROOT)
+        if (!architectureContent.contains('name="testapp"') || !architectureContent.contains('load_customer_lineage')) {
+            throw new GradleException('Knowledge graph verification failed. Missing expected architecture model markers for testapp/load_customer_lineage.')
         }
 
         def dir = outputDir.get().asFile

@@ -30,19 +30,21 @@ tasks.register('assembleArchitecture') {
     dependsOn(':architecture:assembleArchitectureModel')
     outputs.file(reportsDir.map { it.file('architecture-report.html') })
     doLast {
-        def exportDir = project(':architecture').layout.buildDirectory.dir('archimate-export').get().asFile
+        def exportDir = project(':architecture').layout.buildDirectory.dir('archi-export').get().asFile
+        def pdfDir = new File(exportDir, 'pdf')
         requireFiles([
-                new File(exportDir, 'application-components.xml'),
-                new File(exportDir, 'stored-procedures.xml'),
-                new File(exportDir, 'relationships.xml'),
-                new File(exportDir, 'archimate-export.json')
+                new File(exportDir, 'test-lineage.xml'),
+                new File(exportDir, 'test-lineage.xlsx')
         ])
+        def pdfFiles = (pdfDir.listFiles() ?: [] as File[]).findAll { it.isFile() && it.name.endsWith('.pdf') }
+        if (pdfFiles.isEmpty()) {
+            throw new GradleException("Required PDF exports missing: ${pdfDir}")
+        }
         writeReport('architecture-report.html', 'Architecture Report', [
                 "source=${exportDir}",
-                "components=application-components.xml",
-                "procedures=stored-procedures.xml",
-                "relationships=relationships.xml",
-                "export=archimate-export.json"
+                "xmlExport=test-lineage.xml",
+                "xlsxExport=test-lineage.xlsx",
+                "pdfExports=${pdfFiles.collect { it.name }.join(',')}"
         ])
     }
 }

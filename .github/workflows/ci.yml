@@ -97,7 +97,30 @@ jobs:
           name: lineage-artifacts
           path: artifacts/lineage
 
+      - name: Install Archi runtime
+        run: |
+          ARCHI_VERSION=5.9.0
+          ARCHI_URL="https://github.com/archimatetool/archi.io/releases/download/${ARCHI_VERSION}/Archi-Linux64-${ARCHI_VERSION}.tgz"
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            xvfb \
+            unzip \
+            libgtk-3-0 \
+            libnss3 \
+            libxss1 \
+            libxtst6 \
+            libxrender1 \
+            libxi6 \
+            libasound2 \
+            libglib2.0-0
+          curl -fsSL "${ARCHI_URL}" -o /tmp/archi.tgz
+          sudo mkdir -p /opt/archi
+          sudo tar -xzf /tmp/archi.tgz -C /opt/archi --strip-components=1
+          sudo chmod +x /opt/archi/Archi
+
       - name: Run graph verification lifecycle
+        env:
+          ARCHI_HOME: /opt/archi
         run: ./gradlew --no-daemon assembleArchitecture startNeo4j loadKnowledgeGraph verifyKnowledgeGraph
 
       - name: Upload graph artifacts
@@ -106,6 +129,7 @@ jobs:
         with:
           name: graph-artifacts
           path: |
+            1-architecture/build/archi-export/**
             4-neo4j/build/graph-report/**
             build/reports/graph-load-report.html
             build/reports/graph-report.html

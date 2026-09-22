@@ -14,10 +14,13 @@ class GrowthCrossModuleContractTest {
         Path root = ProjectRootPaths.root();
         String architectureBuild = Files.readString(root.resolve(Path.of("1-architecture", "build.gradle")), StandardCharsets.UTF_8);
         assertThat(architectureBuild).contains("assembleArchitectureModel");
-        assertThat(architectureBuild).contains("application-components.xml");
-        assertThat(architectureBuild).contains("stored-procedures.xml");
-        assertThat(architectureBuild).contains("relationships.xml");
-        assertThat(architectureBuild).contains("archimate-export.json");
+        assertThat(architectureBuild).contains("name.jurgenei.gradle.archi");
+        assertThat(architectureBuild).contains("name.jurgenei.gradle.xml");
+        assertThat(architectureBuild).contains("stub false");
+        assertThat(architectureBuild).contains("test-lineage.export.xml");
+        assertThat(architectureBuild).contains("test-lineage.xml");
+        assertThat(architectureBuild).contains("test-lineage.xlsx");
+        assertThat(architectureBuild).contains("archi-export/pdf");
     }
 
     @Test

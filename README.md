@@ -35,6 +35,7 @@ example-lineage-plsql
 
 - Docker running locally
 - Java 21
+- Archi runtime (for `:architecture:assembleArchitectureModel`)
 
 ## TDD growth progression
 
@@ -84,6 +85,15 @@ Run full local flow:
 ```bash
 ./gradlew verifyKnowledgeGraph endToEndTest
 ```
+
+Run architecture export from ArchiMate model (`1-architecture/src/main/resources/archimate/test-lineage.archimate`):
+
+```bash
+./gradlew :architecture:assembleArchitectureModel
+```
+
+This task uses real Archi runtime (not stub). Set `ARCHI_HOME` when Archi is not installed in default path.
+It generates `build/archi-export/test-lineage.export.xml`, transforms it with `src/main/resources/xsl/archi2model.xsl`, and writes `build/archi-export/test-lineage.xml` for downstream phases.
 
 ## CI workflow stages
 
