@@ -99,8 +99,9 @@ jobs:
 
       - name: Install Archi runtime
         run: |
-          ARCHI_VERSION=5.9.0
-          ARCHI_URL="https://github.com/archimatetool/archi.io/releases/download/${ARCHI_VERSION}/Archi-Linux64-${ARCHI_VERSION}.tgz"
+          ARCHI_RELEASE_TAG=5.10_0
+          ARCHI_VERSION=5.10.0
+          ARCHI_URL="https://github.com/archimatetool/archi.io/releases/download/${ARCHI_RELEASE_TAG}/Archi-Linux64-${ARCHI_VERSION}.tgz"
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends \
             xvfb \
