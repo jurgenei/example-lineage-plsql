@@ -1,4 +1,4 @@
-package com.example.lineage;
+package name.jurgenei.example.lineage;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

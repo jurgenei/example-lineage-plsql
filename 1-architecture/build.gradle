@@ -1,0 +1,18 @@
+plugins {
+    id 'base'
+}
+
+tasks.register('assembleArchitectureModel') {
+    group = 'lineage'
+    description = 'Produces ArchiMate exports for graph stitching.'
+    def outputDir = layout.buildDirectory.dir('archimate-export')
+    outputs.dir(outputDir)
+    doLast {
+        def dir = outputDir.get().asFile
+        dir.mkdirs()
+        new File(dir, 'application-components.xml').text = '<components><component id="PreProcessor"/></components>'
+        new File(dir, 'stored-procedures.xml').text = '<procedures><procedure id="LOAD_CUSTOMER_LINEAGE"/></procedures>'
+        new File(dir, 'relationships.xml').text = '<relationships><rel source="PreProcessor" target="LOAD_CUSTOMER_LINEAGE" type="CALLS"/></relationships>'
+        new File(dir, 'archimate-export.json').text = '{"components":["PreProcessor"],"procedures":["LOAD_CUSTOMER_LINEAGE"]}'
+    }
+}

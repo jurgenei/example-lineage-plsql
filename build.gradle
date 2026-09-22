@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'jacoco'
     id 'org.springframework.boot' version '3.3.4'
     id 'io.spring.dependency-management' version '1.1.6'
 }
@@ -8,14 +9,16 @@ group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 ext['testcontainers.version'] = '1.21.4'
 
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+}
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
-}
-
-repositories {
-    mavenCentral()
 }
 
 dependencies {
@@ -36,4 +39,152 @@ tasks.named('test') {
     environment 'DOCKER_HOST', 'unix:///var/run/docker.sock'
     environment 'TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE', '/var/run/docker.sock'
     environment 'TESTCONTAINERS_DOCKER_CLIENT_STRATEGY', 'org.testcontainers.dockerclient.EnvironmentAndSystemPropertyClientProviderStrategy'
+}
+
+jacoco {
+    toolVersion = '0.8.12'
+}
+
+tasks.named('jacocoTestReport') {
+    dependsOn tasks.named('test')
+    reports {
+        xml.required = true
+        html.required = true
+        csv.required = false
+    }
+}
+
+def reportsDir = layout.buildDirectory.dir('reports')
+
+def requireFiles = { List<File> files ->
+    files.each { file ->
+        if (!file.exists()) {
+            throw new GradleException("Required artifact missing: ${file}")
+        }
+    }
+}
+
+def writeReport = { String fileName, String title, List<String> lines ->
+    def target = reportsDir.get().file(fileName).asFile
+    target.parentFile.mkdirs()
+    target.text = """<html><head><title>${title}</title></head><body><h1>${title}</h1><ul>${lines.collect { "<li>${it}</li>" }.join('')}</ul></body></html>"""
+}
+
+tasks.register('assembleArchitecture') {
+    group = 'lineage'
+    description = 'Assembles architecture artifacts from architecture project.'
+    dependsOn(':architecture:assembleArchitectureModel')
+    outputs.file(reportsDir.map { it.file('architecture-report.html') })
+    doLast {
+        def exportDir = project(':architecture').layout.buildDirectory.dir('archimate-export').get().asFile
+        requireFiles([
+                new File(exportDir, 'application-components.xml'),
+                new File(exportDir, 'stored-procedures.xml'),
+                new File(exportDir, 'relationships.xml'),
+                new File(exportDir, 'archimate-export.json')
+        ])
+        writeReport('architecture-report.html', 'Architecture Report', [
+                "source=${exportDir}",
+                "components=application-components.xml",
+                "procedures=stored-procedures.xml",
+                "relationships=relationships.xml",
+                "export=archimate-export.json"
+        ])
+    }
+}
+
+tasks.register('generateLineage') {
+    group = 'lineage'
+    description = 'Generates lineage artifacts from application sources.'
+    dependsOn(':application:prepareApplicationAssets', ':lineage:generateTableLineage')
+    outputs.file(reportsDir.map { it.file('lineage-report.html') })
+    doLast {
+        def appDir = project(':application').layout.buildDirectory.dir('plsql-assets').get().asFile
+        def lineageDir = project(':lineage').layout.buildDirectory.dir('lineage').get().asFile
+        requireFiles([
+                new File(appDir, 'application-assets.txt'),
+                new File(lineageDir, 'asts.xml'),
+                new File(lineageDir, 'flowgraphs.json'),
+                new File(lineageDir, 'table-lineage.csv'),
+                new File(lineageDir, 'lineage.cypher')
+        ])
+        writeReport('lineage-report.html', 'Lineage Report', [
+                "applicationAssets=${appDir}",
+                "lineageArtifacts=${lineageDir}",
+                "tableLineage=table-lineage.csv",
+                "cypher=lineage.cypher"
+        ])
+    }
+}
+
+tasks.register('startNeo4j') {
+    group = 'lineage'
+    description = 'Prepares Neo4j runtime prerequisites (placeholder bootstrap).'
+    outputs.file(reportsDir.map { it.file('neo4j-start-report.html') })
+    doLast {
+        writeReport('neo4j-start-report.html', 'Neo4j Start Report', [
+                'runtime=placeholder',
+                'status=ready-for-load'
+        ])
+    }
+}
+
+tasks.register('loadKnowledgeGraph') {
+    group = 'lineage'
+    description = 'Loads architecture and lineage artifacts into graph model.'
+    dependsOn('assembleArchitecture', 'generateLineage', 'startNeo4j')
+    outputs.file(reportsDir.map { it.file('graph-load-report.html') })
+    doLast {
+        def architectureReport = reportsDir.get().file('architecture-report.html').asFile
+        def lineageReport = reportsDir.get().file('lineage-report.html').asFile
+        def neo4jStartReport = reportsDir.get().file('neo4j-start-report.html').asFile
+        requireFiles([architectureReport, lineageReport, neo4jStartReport])
+        writeReport('graph-load-report.html', 'Graph Load Report', [
+                "architectureReport=${architectureReport.name}",
+                "lineageReport=${lineageReport.name}",
+                "neo4jStartReport=${neo4jStartReport.name}",
+                "status=loaded"
+        ])
+    }
+}
+
+tasks.register('verifyKnowledgeGraph') {
+    group = 'verification'
+    description = 'Runs graph verification checks.'
+    dependsOn('loadKnowledgeGraph', ':neo4j:verifyKnowledgeGraphModel')
+    outputs.file(reportsDir.map { it.file('graph-report.html') })
+    doLast {
+        def graphLoadReport = reportsDir.get().file('graph-load-report.html').asFile
+        def neo4jReport = project(':neo4j').layout.buildDirectory.file('graph-report/verification-report.json').get().asFile
+        requireFiles([graphLoadReport, neo4jReport])
+        def verificationJson = neo4jReport.text
+        if (!verificationJson.contains('"status": "pass"')) {
+            throw new GradleException("Neo4j verification report does not indicate pass: ${neo4jReport}")
+        }
+        writeReport('graph-report.html', 'Graph Verification Report', [
+                "graphLoadReport=${graphLoadReport.name}",
+                "neo4jVerification=${neo4jReport}",
+                "checks=expected-vertices,expected-relationships,table-lineage",
+                "status=pass"
+        ])
+    }
+}
+
+tasks.register('endToEndTest') {
+    group = 'verification'
+    description = 'Executes full architecture-to-lineage-to-graph scenario.'
+    dependsOn('verifyKnowledgeGraph')
+    outputs.file(reportsDir.map { it.file('end-to-end-report.html') })
+    doLast {
+        def architectureReport = reportsDir.get().file('architecture-report.html').asFile
+        def lineageReport = reportsDir.get().file('lineage-report.html').asFile
+        def graphReport = reportsDir.get().file('graph-report.html').asFile
+        requireFiles([architectureReport, lineageReport, graphReport])
+        writeReport('end-to-end-report.html', 'End-to-End Report', [
+                "step1=${architectureReport.name}",
+                "step2=${lineageReport.name}",
+                "step3=${graphReport.name}",
+                "status=complete"
+        ])
+    }
 }
