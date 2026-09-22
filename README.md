@@ -96,6 +96,10 @@ Run full local flow:
 
 Each stage uploads artifacts; next stage downloads prior stage artifacts.
 
+Coverage pipeline:
+
+- `coverage.yml` runs `test` + `jacocoTestReport`, uploads JaCoCo reports, and publishes coverage to Codecov.
+
 ## See CI results
 
 GitHub UI:
