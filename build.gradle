@@ -33,7 +33,7 @@ tasks.register('assembleArchitecture') {
         def exportDir = project(':architecture').layout.buildDirectory.dir('archi-export').get().asFile
         def pdfDir = new File(exportDir, 'pdf')
         requireFiles([
-                new File(exportDir, 'test-lineage.xml'),
+                new File(exportDir, 'test-lineage.sexpr'),
                 new File(exportDir, 'test-lineage.xlsx')
         ])
         def pdfFiles = (pdfDir.listFiles() ?: [] as File[]).findAll { it.isFile() && it.name.endsWith('.pdf') }
@@ -53,24 +53,26 @@ tasks.register('generateLineage') {
     group = 'lineage'
     description = 'Generates lineage artifacts from application sources.'
     dependsOn(':application:prepareApplicationAssets', ':lineage:generateTableLineage')
-    outputs.file(reportsDir.map { it.file('lineage-report.html') })
-    doLast {
-        def appDir = project(':application').layout.buildDirectory.dir('plsql-assets').get().asFile
-        def lineageDir = project(':lineage').layout.buildDirectory.dir('lineage').get().asFile
-        requireFiles([
-                new File(appDir, 'application-assets.txt'),
-                new File(lineageDir, 'asts.xml'),
-                new File(lineageDir, 'flowgraphs.json'),
-                new File(lineageDir, 'table-lineage.csv'),
-                new File(lineageDir, 'lineage.cypher')
-        ])
-        writeReport('lineage-report.html', 'Lineage Report', [
-                "applicationAssets=${appDir}",
-                "lineageArtifacts=${lineageDir}",
-                "tableLineage=table-lineage.csv",
-                "cypher=lineage.cypher"
-        ])
-    }
+
+
+//    outputs.file(reportsDir.map { it.file('lineage-report.html') })
+//    doLast {
+//        def appDir = project(':application').layout.buildDirectory.dir('plsql-assets').get().asFile
+//        def lineageDir = project(':lineage').layout.buildDirectory.dir('lineage').get().asFile
+//        requireFiles([
+//                new File(appDir, 'application-assets.txt'),
+//                new File(lineageDir, 'asts.xml'),
+//                new File(lineageDir, 'flowgraphs.json'),
+//                new File(lineageDir, 'table-lineage.csv'),
+//                new File(lineageDir, 'lineage.cypher')
+//        ])
+//        writeReport('lineage-report.html', 'Lineage Report', [
+//                "applicationAssets=${appDir}",
+//                "lineageArtifacts=${lineageDir}",
+//                "tableLineage=table-lineage.csv",
+//                "cypher=lineage.cypher"
+//        ])
+//    }
 }
 
 tasks.register('startNeo4j') {
