@@ -48,7 +48,7 @@ def astDir = layout.buildDirectory.dir('ast').get().toString()
 def extractDir = layout.buildDirectory.dir('extract').get().toString()
 
 tasks.register('ast', XmlAstPlsqlGradleTask) { it ->
-
+    dependsOn(':application:extractOracleSchemaDdl')
     configureXmlAstTask(it, ddlDir, astDir,
             'Parses benchmark SQL samples parallel.')
     configureParTask(it)
