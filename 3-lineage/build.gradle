@@ -77,7 +77,7 @@ tasks.register('generateTableLineage') {
     dependsOn(':application:prepareApplicationAssets')
     dependsOn('extract')
 
-    outputs.dir(lineageDir)
+//    outputs.dir(lineageDir)
 
 //   def archDir = project(':architecture').layout.buildDirectory.dir('archi-export').get().asFile
 //    doLast {
