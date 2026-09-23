@@ -55,11 +55,11 @@ jobs:
       - name: Make Gradle wrapper executable
         run: chmod +x gradlew
 
-      - name: Download structure/contract reports
-        uses: actions/download-artifact@v7
-        with:
-          name: structure-contract-test-reports
-          path: artifacts/structure-contract
+#      - name: Download structure/contract reports
+#        uses: actions/download-artifact@v7
+#        with:
+#          name: structure-contract-test-reports
+#          path: artifacts/structure-contract
 
       - name: Run lineage generation lifecycle
         run: ./gradlew --no-daemon :application:prepareApplicationAssets :lineage:generateTableLineage generateLineage
@@ -91,37 +91,13 @@ jobs:
       - name: Make Gradle wrapper executable
         run: chmod +x gradlew
 
-      - name: Download lineage artifacts
-        uses: actions/download-artifact@v7
-        with:
-          name: lineage-artifacts
-          path: artifacts/lineage
-
-      - name: Install Archi runtime
-        run: |
-          ARCHI_RELEASE_TAG=5.10_0
-          ARCHI_VERSION=5.10.0
-          ARCHI_URL="https://github.com/archimatetool/archi.io/releases/download/${ARCHI_RELEASE_TAG}/Archi-Linux64-${ARCHI_VERSION}.tgz"
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-            xvfb \
-            unzip \
-            libgtk-3-0 \
-            libnss3 \
-            libxss1 \
-            libxtst6 \
-            libxrender1 \
-            libxi6 \
-            libasound2t64 \
-            libglib2.0-0
-          curl -fsSL "${ARCHI_URL}" -o /tmp/archi.tgz
-          sudo mkdir -p /opt/archi
-          sudo tar -xzf /tmp/archi.tgz -C /opt/archi --strip-components=1
-          sudo chmod +x /opt/archi/Archi
+#      - name: Download lineage artifacts
+#        uses: actions/download-artifact@v7
+#        with:
+#          name: lineage-artifacts
+#          path: artifacts/lineage
 
       - name: Run graph verification lifecycle
-        env:
-          ARCHI_HOME: /opt/archi
         run: ./gradlew --no-daemon assembleArchitecture startNeo4j loadKnowledgeGraph verifyKnowledgeGraph
 
       - name: Upload graph artifacts
@@ -152,37 +128,13 @@ jobs:
       - name: Make Gradle wrapper executable
         run: chmod +x gradlew
 
-      - name: Download graph artifacts
-        uses: actions/download-artifact@v7
-        with:
-          name: graph-artifacts
-          path: artifacts/graph
-
-      - name: Install Archi runtime
-        run: |
-          ARCHI_RELEASE_TAG=5.10_0
-          ARCHI_VERSION=5.10.0
-          ARCHI_URL="https://github.com/archimatetool/archi.io/releases/download/${ARCHI_RELEASE_TAG}/Archi-Linux64-${ARCHI_VERSION}.tgz"
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-            xvfb \
-            unzip \
-            libgtk-3-0 \
-            libnss3 \
-            libxss1 \
-            libxtst6 \
-            libxrender1 \
-            libxi6 \
-            libasound2t64 \
-            libglib2.0-0
-          curl -fsSL "${ARCHI_URL}" -o /tmp/archi.tgz
-          sudo mkdir -p /opt/archi
-          sudo tar -xzf /tmp/archi.tgz -C /opt/archi --strip-components=1
-          sudo chmod +x /opt/archi/Archi
+#      - name: Download graph artifacts
+#        uses: actions/download-artifact@v7
+#        with:
+#          name: graph-artifacts
+#          path: artifacts/graph
 
       - name: Run end-to-end lifecycle
-        env:
-          ARCHI_HOME: /opt/archi
         run: ./gradlew --no-daemon endToEndTest
 
       - name: Run Oracle lineage integration test
