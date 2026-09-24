@@ -1,55 +1,201 @@
 # example-lineage-plsql
 
-![Conformance](https://img.shields.io/badge/Conformance-Check--All%20Passing-brightgreen)
-[![Build and Test](https://github.com/jurgenei/example-lineage-plsql/actions/workflows/ci.yml/badge.svg)](https://github.com/jurgenei/example-lineage-plsql/actions/workflows/ci.yml)
-[![Coverage CI](https://github.com/jurgenei/example-lineage-plsql/actions/workflows/coverage.yml/badge.svg)](https://github.com/jurgenei/example-lineage-plsql/actions/workflows/coverage.yml)
-[![CodeQL](https://github.com/jurgenei/example-lineage-plsql/actions/workflows/codeql.yml/badge.svg)](https://github.com/jurgenei/example-lineage-plsql/actions/workflows/codeql.yml)
-[![Dependency Check](https://github.com/jurgenei/example-lineage-plsql/actions/workflows/dependency-check.yml/badge.svg)](https://github.com/jurgenei/example-lineage-plsql/actions/workflows/dependency-check.yml)
-[![SpotBugs Security](https://github.com/jurgenei/example-lineage-plsql/actions/workflows/spotbugs-security.yml/badge.svg)](https://github.com/jurgenei/example-lineage-plsql/actions/workflows/spotbugs-security.yml)
-[![Dependabot](https://img.shields.io/badge/dependabot-enabled-025E8C?logo=dependabot)](https://github.com/jurgenei/example-lineage-plsql/security/dependabot)
-[![Coverage](https://codecov.io/gh/jurgenei/example-lineage-plsql/graph/badge.svg)](https://codecov.io/gh/jurgenei/example-lineage-plsql)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Java](https://img.shields.io/badge/java-21+-green.svg)](https://www.oracle.com/java/)
-[![Gradle](https://img.shields.io/badge/gradle-8+-blue.svg)](https://gradle.org/)
+A runnable reference implementation demonstrating how lineage can be derived from implementation artifacts, verified through automated tests, and published as reusable lineage and graph-based knowledge.
 
-Architecture-driven lineage reference project. Repository grows as multi-project Gradle build: PL/SQL assets -> lineage artifacts -> graph verification -> end-to-end report.
+The project provides an end-to-end example spanning:
 
-## Stack
+- Architecture intent
+- Oracle schema management with Liquibase
+- PL/SQL transformations
+- Lineage derivation
+- Knowledge graph publication
+- Automated verification
+- End-to-end reporting
+
+Rather than treating lineage as documentation, this repository treats lineage as a reproducible engineering artifact.
+
+---
+
+# Why This Repository Exists
+
+Many lineage examples produce diagrams.
+
+This repository demonstrates a complete and executable lineage lifecycle:
+
+```text
+Architecture Intent
+        +
+Implementation Reality
+                |
+                v
+         Derived Knowledge
+                |
+                v
+        Verifiable Lineage
+```
+
+Every lineage assertion should:
+
+- originate from evidence
+- be reproducible
+- be testable
+- be traceable back to source artifacts
+
+The repository is intended as:
+
+- a learning resource
+- a reference implementation
+- a verification platform
+
+---
+
+# Relationship to the Jurgenei Initiative
+
+This repository is the executable reference implementation.
+
+Broader concepts such as:
+
+- Near-Reality Lineage
+- Continuous Architecture Reconciliation
+- Extract → Derive → Resolve → Publish
+- Canonical Enterprise Graphs
+- Enterprise Knowledge Compilation
+
+belong in the `jurgenei` repository.
+
+This repository focuses on demonstrating those ideas through running software and verifiable results.
+
+---
+
+# What Gets Built
+
+```text
+ArchiMate Model
+        |
+        v
+Architecture Export
+        |
+        v
+Liquibase Deployment
+        |
+        v
+Oracle Schema
+        |
+        v
+PL/SQL Procedures
+        |
+        v
+Lineage Artifacts
+        |
+        v
+Neo4j Knowledge Graph
+        |
+        v
+Verification Reports
+```
+
+---
+
+# Learning Paths
+
+## Reader
+
+Understand the concepts, architecture, reports and generated outputs.
+
+## Practitioner
+
+Run the complete lifecycle and inspect generated lineage.
+
+## Contributor
+
+Extend architecture, database, lineage or graph capabilities while maintaining verification.
+
+---
+
+# Progressive Learning Levels
+
+## Level 0 – Environment
+
+Build the platform and start required services.
+
+## Level 1 – Architecture Intent
+
+Export architecture models and establish intended relationships.
+
+## Level 2 – Database Model
+
+Deploy Liquibase definitions and create Oracle objects.
+
+## Level 3 – Transformation Logic
+
+Execute PL/SQL transformations.
+
+## Level 4 – Lineage Derivation
+
+Generate lineage from deployed artifacts.
+
+## Level 5 – Knowledge Graph Publication
+
+Load derived information into Neo4j.
+
+## Level 6 – Verification
+
+Validate expected relationships and lineage paths.
+
+---
+
+# Technology Stack
 
 - Java 21
-- Spring Boot 3.3 (application + knowledge-graph client)
-- Liquibase XML changelogs (Oracle schema/procedure model)
-- Testcontainers + Oracle XE (`gvenzl/oracle-xe:21-slim-faststart`)
-- Testcontainers + Neo4j (`neo4j:5.23.0`)
+- Spring Boot 3.3
+- Liquibase XML changelogs
+- Oracle XE via Testcontainers
+- Neo4j via Testcontainers
 - Gradle
 
-## Multi-project layout
+---
+
+# Repository Structure
 
 ```text
 example-lineage-plsql
-├── 1-architecture/ # architecture intent exports
-├── 2-application/  # application code + PL/SQL assets under analysis
-│   ├── src/main/... # Spring Boot + Liquibase runtime
-│   └── src/test/... # bootstrap/contract/e2e contract tests
-├── 3-lineage/      # discovered lineage artifacts
-├── 4-knowledge-graph/ # Spring Boot Neo4j client + graph verification/report
-└── .github/workflows/ci.yml
+│
+├── 1-architecture
+│   └── Architecture intent exports
+│
+├── 2-application
+│   ├── Spring Boot runtime
+│   ├── Liquibase assets
+│   └── PL/SQL assets under analysis
+│
+├── 3-lineage
+│   └── Generated lineage artifacts
+│
+├── 4-knowledge-graph
+│   └── Neo4j publication and verification
+│
+└── .github/workflows
 ```
 
-## Prerequisites
+---
 
-- Docker running locally
+# Prerequisites
+
+- Docker
 - Java 21
-- Archi runtime (for `:architecture:assembleArchitectureModel`)
+- Archi Runtime (for architecture export)
 
-## TDD growth progression
+---
 
-1. Structure bootstrap tests (`GrowthStructureBootstrapTest`)
-2. Cross-module contract tests (`GrowthCrossModuleContractTest`)
-3. End-to-end graph verification contract tests (`GrowthEndToEndGraphVerificationContractTest`)
-4. Oracle integration test (`LineageLoaderIntegrationTest`)
+# Quick Start
 
-## Root orchestration lifecycle
+Run the complete end-to-end lifecycle:
+
+```bash
+./gradlew endToEndTest
+```
+
+Or execute stages individually:
 
 ```bash
 ./gradlew assembleArchitecture
@@ -60,23 +206,85 @@ example-lineage-plsql
 ./gradlew endToEndTest
 ```
 
-Generated root reports:
+Expected outcome:
 
-- `build/reports/architecture-report.html`
-- `build/reports/lineage-report.html`
-- `build/reports/knowledge-graph-start-report.html`
-- `build/reports/graph-load-report.html`
-- `build/reports/graph-report.html`
-- `build/reports/end-to-end-report.html`
+```text
+✓ Architecture exported
+✓ Schema deployed
+✓ Procedures created
+✓ Lineage generated
+✓ Graph loaded
+✓ Verification completed
+```
 
-Generated knowledge-graph reports:
+---
 
-- `4-knowledge-graph/build/graph-report/container-start-report.json`
-- `4-knowledge-graph/build/graph-report/load-report.json`
-- `4-knowledge-graph/build/graph-report/graph-dump.json`
-- `4-knowledge-graph/build/graph-report/verification-report.json`
+# Verification Strategy
 
-## Local commands
+Lineage is treated as an engineering discipline.
+
+Verification is performed through:
+
+- Structure bootstrap tests
+- Cross-module contract tests
+- End-to-end graph verification tests
+- Oracle integration tests
+
+Build success demonstrates that derived outputs satisfy expected relationships.
+
+---
+
+# TDD Growth Progression
+
+- GrowthStructureBootstrapTest
+- GrowthCrossModuleContractTest
+- GrowthEndToEndGraphVerificationContractTest
+- LineageLoaderIntegrationTest
+
+The project grows incrementally from structure validation toward full end-to-end lineage verification.
+
+---
+
+# Generated Reports
+
+## Root Reports
+
+```text
+build/reports/
+├── architecture-report.html
+├── lineage-report.html
+├── knowledge-graph-start-report.html
+├── graph-load-report.html
+├── graph-report.html
+└── end-to-end-report.html
+```
+
+## Knowledge Graph Reports
+
+```text
+4-knowledge-graph/build/graph-report/
+├── container-start-report.json
+├── load-report.json
+├── graph-dump.json
+└── verification-report.json
+```
+
+---
+
+# CI/CD
+
+The CI pipeline validates four gated stages:
+
+- structure-and-contract-tests
+- lineage-tests
+- graph-tests
+- e2e-tests
+
+Coverage is generated through JaCoCo and published via Codecov.
+
+---
+
+# Local Development
 
 Run staged growth tests:
 
@@ -86,68 +294,49 @@ Run staged growth tests:
 ./gradlew :application:test --tests name.jurgenei.example.lineage.GrowthEndToEndGraphVerificationContractTest
 ```
 
-Run Oracle integration test:
+Run Oracle integration tests:
 
 ```bash
 ./gradlew :application:test --tests name.jurgenei.example.lineage.LineageLoaderIntegrationTest
 ```
 
-Run full local flow:
+Run graph verification:
 
 ```bash
 ./gradlew verifyKnowledgeGraph endToEndTest
 ```
 
-Run knowledge-graph scripts (Gradle tasks are source-of-truth):
+---
 
-```bash
-bash 4-knowledge-graph/scripts/load-stub-graph.sh
-bash 4-knowledge-graph/scripts/dump-stub-graph.sh
-bash 4-knowledge-graph/scripts/verify-knowledge-graph.sh
+# Design Principles
+
+- Derive rather than manually maintain metadata.
+- Keep lineage reproducible.
+- Prefer evidence over documentation.
+- Keep module contracts explicit.
+- Verify graph structures deterministically.
+- Treat architecture and lineage as continuously verifiable artifacts.
+
+---
+
+# Success Criteria
+
+A successful build should prove that:
+
+```text
+Architecture intent
+        ↓
+Deployment artifacts
+        ↓
+Derived lineage
+        ↓
+Knowledge graph
+        ↓
+Expected relationships
 ```
 
-Run architecture export from ArchiMate model (`1-architecture/src/main/resources/archimate/test-lineage.archimate`):
+remain consistent and verifiable.
 
-```bash
-./gradlew :architecture:assembleArchitectureModel
-```
+The goal is not merely to generate lineage.
 
-This task uses real Archi runtime (not stub). Set `ARCHI_HOME` when Archi is not installed in default path.
-It generates `build/archi-export/test-lineage.export.xml`, transforms it with `src/main/resources/xsl/archi2model.xsl`, and writes `build/archi-export/test-lineage.xml` for downstream phases.
-
-## CI workflow stages
-
-`ci.yml` runs four gated stages:
-
-1. `structure-and-contract-tests`
-2. `lineage-tests`
-3. `graph-tests`
-4. `e2e-tests`
-
-Each stage uploads artifacts for inspection; graph stage also executes knowledge-graph load/dump script wrappers.
-
-Coverage pipeline:
-
-- `coverage.yml` runs `:application:test` + `:application:jacocoTestReport`, uploads JaCoCo reports, and publishes coverage to Codecov.
-
-## See CI results
-
-GitHub UI:
-
-- Workflow page: `https://github.com/jurgenei/example-lineage-plsql/actions/workflows/ci.yml`
-- All runs: `https://github.com/jurgenei/example-lineage-plsql/actions`
-
-GitHub CLI:
-
-```bash
-gh run list --workflow ci.yml --limit 10
-gh run watch
-gh run view --log
-```
-
-## Best practices
-
-1. Add DB changes through Liquibase XML only.
-2. Add failing test first, then wire task/build logic to green.
-3. Keep module contracts explicit (artifacts + dependency chain).
-4. Keep graph verification deterministic with explicit expected edges.
+The goal is to generate lineage that can be trusted.
