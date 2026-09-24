@@ -4,8 +4,8 @@ plugins {
     id 'name.jurgenei.gradle.xml' version '0.1.11'
 }
 
-group = 'name.jurgenei.example.lineage.plsql'
-version = '0.1.0'
+group =  rootProject.group
+version = rootProject.version
 
 def archimateInput = file('src/main/resources/archimate/test-lineage.archimate')
 def archiExportDir = layout.buildDirectory.dir('archi-export')
