@@ -13,9 +13,10 @@ Architecture-driven lineage reference project. Repository grows as multi-project
 ## Stack
 
 - Java 21
-- Spring Boot 3.3 (integration test application)
+- Spring Boot 3.3 (application + knowledge-graph client)
 - Liquibase XML changelogs (Oracle schema/procedure model)
 - Testcontainers + Oracle XE (`gvenzl/oracle-xe:21-slim-faststart`)
+- Testcontainers + Neo4j (`neo4j:5.23.0`)
 - Gradle
 
 ## Multi-project layout
@@ -27,7 +28,7 @@ example-lineage-plsql
 │   ├── src/main/... # Spring Boot + Liquibase runtime
 │   └── src/test/... # bootstrap/contract/e2e contract tests
 ├── 3-lineage/      # discovered lineage artifacts
-├── 4-neo4j/        # graph verification logic/report
+├── 4-knowledge-graph/ # Spring Boot Neo4j client + graph verification/report
 └── .github/workflows/ci.yml
 ```
 
@@ -35,6 +36,7 @@ example-lineage-plsql
 
 - Docker running locally
 - Java 21
+- Archi runtime (for `:architecture:assembleArchitectureModel`)
 
 ## TDD growth progression
 
@@ -48,7 +50,7 @@ example-lineage-plsql
 ```bash
 ./gradlew assembleArchitecture
 ./gradlew generateLineage
-./gradlew startNeo4j
+./gradlew startKnowledgeGraph
 ./gradlew loadKnowledgeGraph
 ./gradlew verifyKnowledgeGraph
 ./gradlew endToEndTest
@@ -58,10 +60,17 @@ Generated root reports:
 
 - `build/reports/architecture-report.html`
 - `build/reports/lineage-report.html`
-- `build/reports/neo4j-start-report.html`
+- `build/reports/knowledge-graph-start-report.html`
 - `build/reports/graph-load-report.html`
 - `build/reports/graph-report.html`
 - `build/reports/end-to-end-report.html`
+
+Generated knowledge-graph reports:
+
+- `4-knowledge-graph/build/graph-report/container-start-report.json`
+- `4-knowledge-graph/build/graph-report/load-report.json`
+- `4-knowledge-graph/build/graph-report/graph-dump.json`
+- `4-knowledge-graph/build/graph-report/verification-report.json`
 
 ## Local commands
 
@@ -85,6 +94,23 @@ Run full local flow:
 ./gradlew verifyKnowledgeGraph endToEndTest
 ```
 
+Run knowledge-graph scripts (Gradle tasks are source-of-truth):
+
+```bash
+bash 4-knowledge-graph/scripts/load-stub-graph.sh
+bash 4-knowledge-graph/scripts/dump-stub-graph.sh
+bash 4-knowledge-graph/scripts/verify-knowledge-graph.sh
+```
+
+Run architecture export from ArchiMate model (`1-architecture/src/main/resources/archimate/test-lineage.archimate`):
+
+```bash
+./gradlew :architecture:assembleArchitectureModel
+```
+
+This task uses real Archi runtime (not stub). Set `ARCHI_HOME` when Archi is not installed in default path.
+It generates `build/archi-export/test-lineage.export.xml`, transforms it with `src/main/resources/xsl/archi2model.xsl`, and writes `build/archi-export/test-lineage.xml` for downstream phases.
+
 ## CI workflow stages
 
 `ci.yml` runs four gated stages:
@@ -94,7 +120,7 @@ Run full local flow:
 3. `graph-tests`
 4. `e2e-tests`
 
-Each stage uploads artifacts; next stage downloads prior stage artifacts.
+Each stage uploads artifacts for inspection; graph stage also executes knowledge-graph load/dump script wrappers.
 
 Coverage pipeline:
 

@@ -1,3 +1,7 @@
+import groovy.xml.XmlSlurper
+import java.util.Locale
+import java.util.Properties
+
 plugins {
     id 'java'
     id 'jacoco'
@@ -5,8 +9,8 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.6'
 }
 
-group = 'com.example'
-version = '0.0.1-SNAPSHOT'
+group = 'name.jurgenei.example.lineage.plsql'
+version = '0.1.0'
 
 java {
     toolchain {
@@ -28,10 +32,6 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
-    environment 'DOCKER_API_VERSION', '1.41'
-    environment 'DOCKER_HOST', 'unix:///var/run/docker.sock'
-    environment 'TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE', '/var/run/docker.sock'
-    environment 'TESTCONTAINERS_DOCKER_CLIENT_STRATEGY', 'org.testcontainers.dockerclient.EnvironmentAndSystemPropertyClientProviderStrategy'
 }
 
 jacoco {
@@ -50,6 +50,7 @@ tasks.named('jacocoTestReport') {
 tasks.register('prepareApplicationAssets') {
     group = 'lineage'
     description = 'Prepares PL/SQL assets for downstream lineage processing.'
+    dependsOn tasks.named('extractOracleSchemaDdl')
     def outputDir = layout.buildDirectory.dir('plsql-assets')
     outputs.dir(outputDir)
     doLast {
@@ -57,5 +58,219 @@ tasks.register('prepareApplicationAssets') {
         dir.mkdirs()
         def artifact = new File(dir, 'application-assets.txt')
         artifact.text = 'load_customer_lineage.sql'
+    }
+}
+
+tasks.register('extractOracleSchemaDdl') {
+    group = 'lineage'
+    description = 'Extracts Oracle DDL objects from Liquibase changelogs into build/ddl/<schema>/<object-type>/<object>.sql'
+
+    def dbResourcesDir = layout.projectDirectory.dir('src/main/resources/db')
+    def outputDir = layout.buildDirectory.dir('ddl')
+    String localDefaultSchema = null
+    File localGradleProperties = file('gradle.properties')
+    if (localGradleProperties.isFile()) {
+        Properties props = new Properties()
+        localGradleProperties.withInputStream { props.load(it) }
+        localDefaultSchema = props.getProperty('ddlDefaultSchema')?.trim()
+    }
+
+    def defaultSchema = providers.gradleProperty('ddlDefaultSchema')
+    if (localDefaultSchema) {
+        defaultSchema = defaultSchema.orElse(localDefaultSchema)
+    }
+    defaultSchema = defaultSchema
+            .orElse(providers.environmentVariable('ORACLE_USER'))
+            .orElse(providers.environmentVariable('LIQUIBASE_USER'))
+            .orElse(providers.environmentVariable('SPRING_DATASOURCE_USERNAME'))
+            .orElse('liquibase')
+
+    inputs.dir(dbResourcesDir)
+    inputs.property('ddlDefaultSchema', defaultSchema)
+    outputs.dir(outputDir)
+
+    doLast {
+        File master = new File(dbResourcesDir.asFile, 'changelog/db.changelog-master.xml')
+        if (!master.isFile()) {
+            throw new GradleException("Liquibase master changelog not found: ${master}")
+        }
+
+        File ddlRoot = outputDir.get().asFile
+        if (ddlRoot.exists()) {
+            project.delete(ddlRoot)
+        }
+        ddlRoot.mkdirs()
+
+        def writtenFiles = []
+
+        def splitQualifiedName = { String objectName ->
+            String value = objectName?.trim()
+            if (!value) {
+                return [schema: null, name: null]
+            }
+            List<String> parts = value.tokenize('.')
+            if (parts.size() >= 2) {
+                return [schema: parts[0], name: parts[-1]]
+            }
+            return [schema: null, name: value]
+        }
+
+        def sanitize = { String value ->
+            value.replaceAll('[^a-zA-Z0-9_.$#-]', '_')
+        }
+
+        def writeObject = { String objectType, String explicitSchema, String objectName, String sqlText ->
+            if (!objectType || !objectName || !sqlText?.trim()) {
+                return
+            }
+            def split = splitQualifiedName(objectName)
+            String schema = explicitSchema?.trim() ?: split.schema ?: defaultSchema.get()
+            String simpleName = split.name
+            String normalizedType = objectType.toLowerCase(Locale.ROOT)
+            String normalizedSchema = sanitize(schema)
+            String normalizedName = sanitize(simpleName)
+            File targetDir = new File(new File(ddlRoot, normalizedSchema), normalizedType)
+            targetDir.mkdirs()
+            File targetFile = new File(targetDir, "${normalizedName}.sql")
+            targetFile.text = sqlText.stripIndent().trim() + System.lineSeparator()
+            writtenFiles << targetFile
+        }
+
+        def buildCreateTableSql = { change ->
+            String tableName = change.@tableName.text()
+            if (!tableName) {
+                return null
+            }
+            List<String> columnDefs = []
+            change.column.each { column ->
+                String name = column.@name.text()
+                String type = column.@type.text()
+                if (!name || !type) {
+                    return
+                }
+                StringBuilder part = new StringBuilder("${name} ${type}")
+                def constraints = column.constraints
+                if (constraints && constraints.size() > 0) {
+                    if (constraints.@nullable.text() == 'false') {
+                        part.append(' NOT NULL')
+                    }
+                    if (constraints.@primaryKey.text() == 'true') {
+                        part.append(' PRIMARY KEY')
+                    }
+                }
+                columnDefs << part.toString()
+            }
+            if (columnDefs.isEmpty()) {
+                return null
+            }
+            return """\
+CREATE TABLE ${tableName} (
+    ${columnDefs.join(",${System.lineSeparator()}    ")}
+);
+"""
+        }
+
+        def buildCreateSequenceSql = { change ->
+            String sequenceName = change.@sequenceName.text()
+            if (!sequenceName) {
+                return null
+            }
+            StringBuilder sql = new StringBuilder("CREATE SEQUENCE ${sequenceName}")
+            if (change.@startValue.text()) {
+                sql.append(" START WITH ${change.@startValue.text()}")
+            }
+            if (change.@incrementBy.text()) {
+                sql.append(" INCREMENT BY ${change.@incrementBy.text()}")
+            }
+            sql.append(';')
+            return sql.toString()
+        }
+
+        def buildCreateViewSql = { change ->
+            String viewName = change.@viewName.text()
+            String selectQuery = change.@selectQuery.text() ?: change.text()
+            if (!viewName || !selectQuery?.trim()) {
+                return null
+            }
+            return "CREATE OR REPLACE VIEW ${viewName} AS${System.lineSeparator()}${selectQuery.trim()};"
+        }
+
+        def parseSqlObject = { String rawSql ->
+            if (!rawSql?.trim()) {
+                return null
+            }
+            String sql = rawSql.trim()
+            def patterns = [
+                    [type: 'procedure', regex: ~/(?is)^\s*create\s+(?:or\s+replace\s+)?procedure\s+([a-zA-Z0-9_$#.]+)/],
+                    [type: 'function', regex: ~/(?is)^\s*create\s+(?:or\s+replace\s+)?function\s+([a-zA-Z0-9_$#.]+)/],
+                    [type: 'package', regex: ~/(?is)^\s*create\s+(?:or\s+replace\s+)?package\s+([a-zA-Z0-9_$#.]+)/],
+                    [type: 'trigger', regex: ~/(?is)^\s*create\s+(?:or\s+replace\s+)?trigger\s+([a-zA-Z0-9_$#.]+)/],
+                    [type: 'view', regex: ~/(?is)^\s*create\s+(?:or\s+replace\s+)?view\s+([a-zA-Z0-9_$#.]+)/],
+                    [type: 'table', regex: ~/(?is)^\s*create\s+(?:global\s+temporary\s+)?table\s+([a-zA-Z0-9_$#.]+)/],
+                    [type: 'sequence', regex: ~/(?is)^\s*create\s+sequence\s+([a-zA-Z0-9_$#.]+)/],
+                    [type: 'synonym', regex: ~/(?is)^\s*create\s+(?:or\s+replace\s+)?synonym\s+([a-zA-Z0-9_$#.]+)/],
+                    [type: 'type', regex: ~/(?is)^\s*create\s+(?:or\s+replace\s+)?type\s+([a-zA-Z0-9_$#.]+)/
+                    ]
+            ]
+            for (def p : patterns) {
+                def matcher = (sql =~ p.regex)
+                if (matcher.find()) {
+                    return [type: p.type, name: matcher.group(1), sql: sql]
+                }
+            }
+            return null
+        }
+
+        def processChangeLog = { File file ->
+            def parsed = new XmlSlurper(false, false).parse(file)
+            parsed.changeSet.each { changeSet ->
+                changeSet.children().each { change ->
+                    String node = change.name()
+                    switch (node) {
+                        case 'createTable':
+                            String tableName = change.@tableName.text()
+                            writeObject('table', change.@schemaName.text(), tableName, buildCreateTableSql(change))
+                            break
+                        case 'createSequence':
+                            String sequenceName = change.@sequenceName.text()
+                            writeObject('sequence', change.@schemaName.text(), sequenceName, buildCreateSequenceSql(change))
+                            break
+                        case 'createView':
+                            String viewName = change.@viewName.text()
+                            writeObject('view', change.@schemaName.text(), viewName, buildCreateViewSql(change))
+                            break
+                        case 'createProcedure':
+                            String procedureName = change.@procedureName.text()
+                            String procedureSql = change.text()
+                            writeObject('procedure', change.@schemaName.text(), procedureName, procedureSql)
+                            break
+                        case 'sql':
+                            def parsedSql = parseSqlObject(change.text())
+                            if (parsedSql != null) {
+                                writeObject(parsedSql.type, null, parsedSql.name, parsedSql.sql)
+                            }
+                            break
+                        default:
+                            break
+                    }
+                }
+            }
+        }
+
+        def masterParsed = new XmlSlurper(false, false).parse(master)
+        masterParsed.include.each { include ->
+            String includePath = include.@file.text()
+            if (!includePath) {
+                return
+            }
+            String normalizedPath = includePath.startsWith('db/') ? includePath.substring(3) : includePath
+            File includeFile = new File(dbResourcesDir.asFile, normalizedPath)
+            if (!includeFile.isFile()) {
+                throw new GradleException("Included changelog not found: ${includePath} -> ${includeFile}")
+            }
+            processChangeLog(includeFile)
+        }
+
+        logger.lifecycle("Extracted ${writtenFiles.size()} DDL object file(s) into ${ddlRoot}")
     }
 }

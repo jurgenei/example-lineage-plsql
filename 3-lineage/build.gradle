@@ -1,19 +1,91 @@
 plugins {
     id 'base'
+    id 'name.jurgenei.gradle.antlr.plsql' version '0.1.4'
+    id 'name.jurgenei.gradle.xml' version '0.1.11'
 }
+
+import name.jurgenei.gradle.antlr.XmlAstPlsqlGradleTask;
+import name.jurgenei.gradle.xml.XsltTask;
+
+def configureParTask = { Object t ->
+    t.executionModel.set('VIRTUAL_THREADS')
+    t.parallelism.set(3)  // Up to 100 concurrent tasks
+    t.aggressiveGc.set(true)
+    t.gcEveryFiles.set(20)
+    t.gcHeapThresholdPercent.set(80)
+    t.targetExtension.set('.sexpr')
+    t.sexprFormat.set('beautified')
+    t.continueOnError.set(true)
+}
+
+def configureXmlAstTask = { Object t, String sourcePath, String outputDirName, String taskDescription ->
+    t.group = 'verification'
+    t.description = taskDescription
+    t.compression = true
+    t.sourceDirectory.set(file(sourcePath))
+    t.destinationDirectory.set(file(outputDirName))
+
+
+    t.continueOnError.set(true)
+    t.failOnError.set(false)
+    t.failOnTransformationError.set(false)
+    t.force.set(false)
+    t.suppressStackTrace.set(true)
+    t.doFirst {
+        // Capture standard error at WARN level so critical messages always appear
+        logging.captureStandardError(LogLevel.INFO)
+        // Log conversion start at lifecycle level (always visible in normal builds)
+        t.logger.lifecycle("Starting XML AST conversion for ${sourcePath} -> ${outputDirName}")
+    }
+    t.doLast {
+        // Log conversion completion at lifecycle level (always visible)
+        t.logger.lifecycle("Completed XML AST conversion for ${outputDirName}")
+    }
+}
+
+def ddlDir = project(':application').layout.buildDirectory.dir('ddl').get().toString()
+def astDir = layout.buildDirectory.dir('ast').get().toString()
+def extractDir = layout.buildDirectory.dir('extract').get().toString()
+
+tasks.register('ast', XmlAstPlsqlGradleTask) { it ->
+    dependsOn(':application:extractOracleSchemaDdl')
+    configureXmlAstTask(it, ddlDir, astDir,
+            'Parses benchmark SQL samples parallel.')
+    configureParTask(it)
+    it.includes.set(["*/{view,procedure}/**.sql"])
+}
+
+tasks.register('extract', XsltTask) {
+    dependsOn('ast')
+    style 'src/main/xsl/extract.xsl'
+    source(fileTree(astDir) {
+        include '**/*.sexpr'
+    })
+    outputExtension.set('.sexpr')
+    sexprFormat.set('beautified')
+    outputDir.set(file(extractDir))
+    // workers.set(4)
+}
+
+
+
+
 
 tasks.register('generateTableLineage') {
     group = 'lineage'
     description = 'Generates AST, flow graphs, table lineage, and cypher artifacts.'
     dependsOn(':application:prepareApplicationAssets')
-    def outputDir = layout.buildDirectory.dir('lineage')
-    outputs.dir(outputDir)
-    doLast {
-        def dir = outputDir.get().asFile
-        dir.mkdirs()
-        new File(dir, 'asts.xml').text = '<ast source="load_customer_lineage.sql"/>'
-        new File(dir, 'flowgraphs.json').text = '{"flows":["RAW_CUSTOMER->VALID_CUSTOMER","VALID_CUSTOMER->MERGED_CUSTOMER"]}'
-        new File(dir, 'table-lineage.csv').text = 'source,target\nCUSTOMER_REFERENCE,VALID_CUSTOMER\nRAW_CUSTOMER,VALID_CUSTOMER\nVALID_CUSTOMER,MERGED_CUSTOMER\n'
-        new File(dir, 'lineage.cypher').text = 'MERGE (a:Table {name:"RAW_CUSTOMER"}) MERGE (b:Table {name:"VALID_CUSTOMER"}) MERGE (a)-[:WRITES_TO]->(b);'
-    }
+    dependsOn('extract')
+
+//    outputs.dir(lineageDir)
+
+//   def archDir = project(':architecture').layout.buildDirectory.dir('archi-export').get().asFile
+//    doLast {
+//        def dir = outputDir.get().asFile
+//        dir.mkdirs()
+//        new File(dir, 'asts.xml').text = '<ast source="load_customer_lineage.sql"/>'
+//        new File(dir, 'flowgraphs.json').text = '{"flows":["RAW_CUSTOMER->VALID_CUSTOMER","VALID_CUSTOMER->MERGED_CUSTOMER"]}'
+//        new File(dir, 'table-lineage.csv').text = 'source,target\nCUSTOMER_REFERENCE,VALID_CUSTOMER\nRAW_CUSTOMER,VALID_CUSTOMER\nVALID_CUSTOMER,MERGED_CUSTOMER\n'
+//        new File(dir, 'lineage.cypher').text = 'MERGE (a:Table {name:"RAW_CUSTOMER"}) MERGE (b:Table {name:"VALID_CUSTOMER"}) MERGE (a)-[:WRITES_TO]->(b);'
+//    }
 }

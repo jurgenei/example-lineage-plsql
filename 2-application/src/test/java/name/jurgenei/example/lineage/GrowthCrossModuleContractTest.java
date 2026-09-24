@@ -14,10 +14,12 @@ class GrowthCrossModuleContractTest {
         Path root = ProjectRootPaths.root();
         String architectureBuild = Files.readString(root.resolve(Path.of("1-architecture", "build.gradle")), StandardCharsets.UTF_8);
         assertThat(architectureBuild).contains("assembleArchitectureModel");
-        assertThat(architectureBuild).contains("application-components.xml");
-        assertThat(architectureBuild).contains("stored-procedures.xml");
-        assertThat(architectureBuild).contains("relationships.xml");
-        assertThat(architectureBuild).contains("archimate-export.json");
+        assertThat(architectureBuild).contains("name.jurgenei.gradle.archi");
+        assertThat(architectureBuild).contains("name.jurgenei.gradle.xml");
+        assertThat(architectureBuild).contains("test-lineage.export.xml");
+        assertThat(architectureBuild).contains("test-lineage.sexpr");
+        assertThat(architectureBuild).contains("test-lineage.xlsx");
+        assertThat(architectureBuild).contains("archi-export/pdf");
     }
 
     @Test
@@ -35,12 +37,15 @@ class GrowthCrossModuleContractTest {
     }
 
     @Test
-    void shouldDefineNeo4jContractAgainstArchimateAndLineageOutputs() throws Exception {
+    void shouldDefineKnowledgeGraphContractAgainstArchimateAndLineageOutputs() throws Exception {
         Path root = ProjectRootPaths.root();
-        String neo4jBuild = Files.readString(root.resolve(Path.of("4-neo4j", "build.gradle")), StandardCharsets.UTF_8);
+        String knowledgeGraphBuild = Files.readString(root.resolve(Path.of("4-knowledge-graph", "build.gradle")), StandardCharsets.UTF_8);
         String rootBuild = Files.readString(root.resolve("build.gradle"), StandardCharsets.UTF_8);
-        assertThat(neo4jBuild).contains("dependsOn(':architecture:assembleArchitectureModel', ':lineage:generateTableLineage')");
-        assertThat(neo4jBuild).contains("verification-report.json");
-        assertThat(rootBuild).contains("dependsOn('assembleArchitecture', 'generateLineage', 'startNeo4j')");
+        assertThat(knowledgeGraphBuild).contains("startKnowledgeGraphContainer");
+        assertThat(knowledgeGraphBuild).contains("loadKnowledgeGraphStubData");
+        assertThat(knowledgeGraphBuild).contains("dumpKnowledgeGraph");
+        assertThat(knowledgeGraphBuild).contains("verification-report.json");
+        assertThat(knowledgeGraphBuild).contains("KnowledgeGraphFlowRunner");
+        assertThat(rootBuild).contains("dependsOn('assembleArchitecture', 'generateLineage', 'startKnowledgeGraph', ':knowledgeGraph:loadKnowledgeGraphStubData')");
     }
 }

@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Java 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: "21"
@@ -31,7 +31,7 @@ jobs:
 
       - name: Upload structure/contract test reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: structure-contract-test-reports
           path: |
@@ -43,10 +43,10 @@ jobs:
     needs: structure-and-contract-tests
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Java 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: "21"
@@ -55,18 +55,18 @@ jobs:
       - name: Make Gradle wrapper executable
         run: chmod +x gradlew
 
-      - name: Download structure/contract reports
-        uses: actions/download-artifact@v4
-        with:
-          name: structure-contract-test-reports
-          path: artifacts/structure-contract
+#      - name: Download structure/contract reports
+#        uses: actions/download-artifact@v7
+#        with:
+#          name: structure-contract-test-reports
+#          path: artifacts/structure-contract
 
       - name: Run lineage generation lifecycle
         run: ./gradlew --no-daemon :application:prepareApplicationAssets :lineage:generateTableLineage generateLineage
 
       - name: Upload lineage artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: lineage-artifacts
           path: |
@@ -79,10 +79,10 @@ jobs:
     needs: lineage-tests
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Java 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: "21"
@@ -91,22 +91,28 @@ jobs:
       - name: Make Gradle wrapper executable
         run: chmod +x gradlew
 
-      - name: Download lineage artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: lineage-artifacts
-          path: artifacts/lineage
+#      - name: Download lineage artifacts
+#        uses: actions/download-artifact@v7
+#        with:
+#          name: lineage-artifacts
+#          path: artifacts/lineage
+
+      - name: Run knowledge-graph load and dump scripts
+        run: |
+          bash 4-knowledge-graph/scripts/load-stub-graph.sh
+          bash 4-knowledge-graph/scripts/dump-stub-graph.sh
 
       - name: Run graph verification lifecycle
-        run: ./gradlew --no-daemon assembleArchitecture startNeo4j loadKnowledgeGraph verifyKnowledgeGraph
+        run: ./gradlew --no-daemon assembleArchitecture startKnowledgeGraph loadKnowledgeGraph verifyKnowledgeGraph
 
       - name: Upload graph artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: graph-artifacts
           path: |
-            4-neo4j/build/graph-report/**
+            1-architecture/build/archi-export/**
+            4-knowledge-graph/build/graph-report/**
             build/reports/graph-load-report.html
             build/reports/graph-report.html
 
@@ -115,10 +121,10 @@ jobs:
     needs: graph-tests
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Java 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: "21"
@@ -127,11 +133,11 @@ jobs:
       - name: Make Gradle wrapper executable
         run: chmod +x gradlew
 
-      - name: Download graph artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: graph-artifacts
-          path: artifacts/graph
+#      - name: Download graph artifacts
+#        uses: actions/download-artifact@v7
+#        with:
+#          name: graph-artifacts
+#          path: artifacts/graph
 
       - name: Run end-to-end lifecycle
         run: ./gradlew --no-daemon endToEndTest
@@ -141,7 +147,7 @@ jobs:
 
       - name: Upload end-to-end artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: end-to-end-artifacts
           path: |

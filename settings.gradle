@@ -3,9 +3,9 @@ rootProject.name = 'example-lineage-plsql'
 include 'architecture'
 include 'application'
 include 'lineage'
-include 'neo4j'
+include 'knowledgeGraph'
 
 project(':architecture').projectDir = file('1-architecture')
 project(':application').projectDir = file('2-application')
 project(':lineage').projectDir = file('3-lineage')
-project(':neo4j').projectDir = file('4-neo4j')
+project(':knowledgeGraph').projectDir = file('4-knowledge-graph')
