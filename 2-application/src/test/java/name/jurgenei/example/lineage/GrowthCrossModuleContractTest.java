@@ -37,12 +37,12 @@ class GrowthCrossModuleContractTest {
     }
 
     @Test
-    void shouldDefineNeo4jContractAgainstArchimateAndLineageOutputs() throws Exception {
+    void shouldDefineKnowledgeGraphContractAgainstArchimateAndLineageOutputs() throws Exception {
         Path root = ProjectRootPaths.root();
-        String neo4jBuild = Files.readString(root.resolve(Path.of("4-neo4j", "build.gradle")), StandardCharsets.UTF_8);
+        String knowledgeGraphBuild = Files.readString(root.resolve(Path.of("4-knowledge-graph", "build.gradle")), StandardCharsets.UTF_8);
         String rootBuild = Files.readString(root.resolve("build.gradle"), StandardCharsets.UTF_8);
-        assertThat(neo4jBuild).contains("dependsOn(':architecture:assembleArchitectureModel', ':lineage:generateTableLineage')");
-        assertThat(neo4jBuild).contains("verification-report.json");
-        assertThat(rootBuild).contains("dependsOn('assembleArchitecture', 'generateLineage', 'startNeo4j')");
+        assertThat(knowledgeGraphBuild).contains("dependsOn(':architecture:assembleArchitectureModel', ':lineage:generateTableLineage')");
+        assertThat(knowledgeGraphBuild).contains("verification-report.json");
+        assertThat(rootBuild).contains("dependsOn('assembleArchitecture', 'generateLineage', 'startKnowledgeGraph')");
     }
 }

@@ -1,0 +1,71 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.4'
+    id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'name.jurgenei.example.lineage.plsql'
+version = '0.1.0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-data-neo4j'
+    implementation 'org.testcontainers:neo4j:1.21.4'
+    implementation 'org.testcontainers:testcontainers:1.21.4'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.testcontainers:junit-jupiter:1.21.4'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+def reportDir = layout.buildDirectory.dir('graph-report')
+
+tasks.register('startKnowledgeGraphContainer', JavaExec) {
+    group = 'lineage'
+    description = 'Starts ephemeral Neo4j testcontainer and writes startup report.'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'name.jurgenei.example.lineage.knowledgegraph.KnowledgeGraphFlowRunner'
+    args = ['start', reportDir.get().asFile.absolutePath]
+    outputs.file(reportDir.map { it.file('container-start-report.json') })
+}
+
+tasks.register('loadKnowledgeGraphStubData', JavaExec) {
+    group = 'lineage'
+    description = 'Loads stub lineage graph into ephemeral Neo4j testcontainer.'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'name.jurgenei.example.lineage.knowledgegraph.KnowledgeGraphFlowRunner'
+    args = ['load', reportDir.get().asFile.absolutePath]
+    outputs.file(reportDir.map { it.file('load-report.json') })
+}
+
+tasks.register('dumpKnowledgeGraph', JavaExec) {
+    group = 'lineage'
+    description = 'Loads stub data and dumps deterministic graph snapshot.'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'name.jurgenei.example.lineage.knowledgegraph.KnowledgeGraphFlowRunner'
+    args = ['dump', reportDir.get().asFile.absolutePath]
+    outputs.file(reportDir.map { it.file('graph-dump.json') })
+}
+
+tasks.register('verifyKnowledgeGraphModel', JavaExec) {
+    group = 'lineage'
+    description = 'Verifies expected graph edges using Spring Boot Neo4j client and Testcontainers.'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'name.jurgenei.example.lineage.knowledgegraph.KnowledgeGraphFlowRunner'
+    args = ['verify', reportDir.get().asFile.absolutePath]
+    outputs.file(reportDir.map { it.file('verification-report.json') })
+}

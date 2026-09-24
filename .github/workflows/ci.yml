@@ -97,8 +97,13 @@ jobs:
 #          name: lineage-artifacts
 #          path: artifacts/lineage
 
+      - name: Run knowledge-graph load and dump scripts
+        run: |
+          bash 4-knowledge-graph/scripts/load-stub-graph.sh
+          bash 4-knowledge-graph/scripts/dump-stub-graph.sh
+
       - name: Run graph verification lifecycle
-        run: ./gradlew --no-daemon assembleArchitecture startNeo4j loadKnowledgeGraph verifyKnowledgeGraph
+        run: ./gradlew --no-daemon assembleArchitecture startKnowledgeGraph loadKnowledgeGraph verifyKnowledgeGraph
 
       - name: Upload graph artifacts
         if: always()
@@ -107,7 +112,7 @@ jobs:
           name: graph-artifacts
           path: |
             1-architecture/build/archi-export/**
-            4-neo4j/build/graph-report/**
+            4-knowledge-graph/build/graph-report/**
             build/reports/graph-load-report.html
             build/reports/graph-report.html
 

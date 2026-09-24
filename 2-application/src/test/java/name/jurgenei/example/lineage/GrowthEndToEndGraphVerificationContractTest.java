@@ -12,11 +12,11 @@ class GrowthEndToEndGraphVerificationContractTest {
     @Test
     void shouldDeclareExpectedLineageEdgesForGraphVerification() throws Exception {
         Path root = ProjectRootPaths.root();
-        String neo4jBuild = Files.readString(root.resolve(Path.of("4-neo4j", "build.gradle")), StandardCharsets.UTF_8);
-        assertThat(neo4jBuild).contains("CUSTOMER_REFERENCE->VALID_CUSTOMER");
-        assertThat(neo4jBuild).contains("RAW_CUSTOMER->VALID_CUSTOMER");
-        assertThat(neo4jBuild).contains("VALID_CUSTOMER->MERGED_CUSTOMER");
-        assertThat(neo4jBuild).contains("\"status\": \"pass\"");
+        String knowledgeGraphBuild = Files.readString(root.resolve(Path.of("4-knowledge-graph", "build.gradle")), StandardCharsets.UTF_8);
+        assertThat(knowledgeGraphBuild).contains("CUSTOMER_REFERENCE->VALID_CUSTOMER");
+        assertThat(knowledgeGraphBuild).contains("RAW_CUSTOMER->VALID_CUSTOMER");
+        assertThat(knowledgeGraphBuild).contains("VALID_CUSTOMER->MERGED_CUSTOMER");
+        assertThat(knowledgeGraphBuild).contains("\"status\": \"pass\"");
     }
 
     @Test

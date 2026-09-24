@@ -6,7 +6,7 @@ Evolve the current single-project repository into a multi-project Gradle build t
 
 - Oracle PL/SQL lineage extraction
 - ArchiMate integration
-- Neo4j graph persistence and stitching
+- Knowledge graph persistence and stitching
 - End-to-end verification
 - Single-command execution from the repository root
 
@@ -25,7 +25,7 @@ example-lineage-plsql
 ├── application
 ├── archimate
 ├── lineage
-├── neo4j
+├── knowledge-graph
 │
 ├── build.gradle.kts
 ├── settings.gradle.kts
@@ -169,15 +169,16 @@ Data quality lineage
 
 ---
 
-## neo4j
+## knowledge-graph
 
 Represents runtime knowledge graph validation.
 
 Uses:
 
 ```text
-Neo4j Container
+Graph backend container
 Testcontainers
+Spring Boot Neo4j client
 Cypher stitching
 ```
 
@@ -185,7 +186,8 @@ Consumes:
 
 ```text
 Archimate artifacts
-Lineage Cypher
+Stub graph seed (phase 1)
+Lineage outputs (future phase)
 ```
 
 Creates:
@@ -194,6 +196,7 @@ Creates:
 Nodes
 Relationships
 Verification reports
+Graph dumps
 ```
 
 Responsibilities:
@@ -237,6 +240,20 @@ VALID_CUSTOMER
     -> MERGED_CUSTOMER
 ```
 
+### Scripted execution
+
+```text
+scripts/load-stub-graph.sh
+scripts/dump-stub-graph.sh
+scripts/verify-knowledge-graph.sh
+```
+
+All scripts call Gradle tasks (source-of-truth) and generate artifacts under:
+
+```text
+4-knowledge-graph/build/graph-report/
+```
+
 ---
 
 # Top-Level Orchestration
@@ -273,7 +290,7 @@ application --------+
                 lineage
                     |
                     v
-                 neo4j
+            knowledge-graph
 ```
 
 ---
@@ -303,12 +320,12 @@ Cypher
 
 ---
 
-## startNeo4j
+## startKnowledgeGraph
 
 Starts:
 
 ```text
-Neo4j Testcontainer
+Graph backend Testcontainer
 ```
 
 ---
@@ -353,7 +370,7 @@ Single integration scenario:
 4. Generate Flow Graph
 5. Generate Table Lineage
 6. Generate Cypher
-7. Start Neo4j
+7. Start knowledge graph runtime
 8. Load Graph
 9. Stitch Graph
 10. Execute Verification Queries
@@ -389,7 +406,7 @@ Source Tables
 Target Tables
 ```
 
-With verification executed automatically through Neo4j.
+With verification executed automatically through knowledge graph phase.
 
 ---
 

@@ -54,34 +54,36 @@ tasks.register('generateLineage') {
     description = 'Generates lineage artifacts from application sources.'
     dependsOn(':application:prepareApplicationAssets', ':lineage:generateTableLineage')
 
-
-//    outputs.file(reportsDir.map { it.file('lineage-report.html') })
-//    doLast {
-//        def appDir = project(':application').layout.buildDirectory.dir('plsql-assets').get().asFile
-//        def lineageDir = project(':lineage').layout.buildDirectory.dir('lineage').get().asFile
-//        requireFiles([
-//                new File(appDir, 'application-assets.txt'),
-//                new File(lineageDir, 'asts.xml'),
-//                new File(lineageDir, 'flowgraphs.json'),
-//                new File(lineageDir, 'table-lineage.csv'),
-//                new File(lineageDir, 'lineage.cypher')
-//        ])
-//        writeReport('lineage-report.html', 'Lineage Report', [
-//                "applicationAssets=${appDir}",
-//                "lineageArtifacts=${lineageDir}",
-//                "tableLineage=table-lineage.csv",
-//                "cypher=lineage.cypher"
-//        ])
-//    }
+    outputs.file(reportsDir.map { it.file('lineage-report.html') })
+    doLast {
+        def appDir = project(':application').layout.buildDirectory.dir('plsql-assets').get().asFile
+        def lineageAstDir = project(':lineage').layout.buildDirectory.dir('ast').get().asFile
+        def lineageExtractDir = project(':lineage').layout.buildDirectory.dir('extract').get().asFile
+        requireFiles([
+                new File(appDir, 'application-assets.txt')
+        ])
+        if (!lineageAstDir.exists() || !lineageExtractDir.exists()) {
+            throw new GradleException("Lineage outputs missing. Expected directories: ${lineageAstDir}, ${lineageExtractDir}")
+        }
+        writeReport('lineage-report.html', 'Lineage Report', [
+                "applicationAssets=${appDir}",
+                "lineageAstDir=${lineageAstDir}",
+                "lineageExtractDir=${lineageExtractDir}",
+                "mode=stub-ready-for-future-lineage-contract"
+        ])
+    }
 }
 
-tasks.register('startNeo4j') {
+tasks.register('startKnowledgeGraph') {
     group = 'lineage'
-    description = 'Prepares Neo4j runtime prerequisites (placeholder bootstrap).'
-    outputs.file(reportsDir.map { it.file('neo4j-start-report.html') })
+    description = 'Prepares knowledge graph runtime prerequisites.'
+    dependsOn(':knowledgeGraph:startKnowledgeGraphContainer')
+    outputs.file(reportsDir.map { it.file('knowledge-graph-start-report.html') })
     doLast {
-        writeReport('neo4j-start-report.html', 'Neo4j Start Report', [
-                'runtime=placeholder',
+        def moduleStartReport = project(':knowledgeGraph').layout.buildDirectory.file('graph-report/container-start-report.json').get().asFile
+        requireFiles([moduleStartReport])
+        writeReport('knowledge-graph-start-report.html', 'Knowledge Graph Start Report', [
+                "containerStartReport=${moduleStartReport}",
                 'status=ready-for-load'
         ])
     }
@@ -90,17 +92,19 @@ tasks.register('startNeo4j') {
 tasks.register('loadKnowledgeGraph') {
     group = 'lineage'
     description = 'Loads architecture and lineage artifacts into graph model.'
-    dependsOn('assembleArchitecture', 'generateLineage', 'startNeo4j')
+    dependsOn('assembleArchitecture', 'generateLineage', 'startKnowledgeGraph', ':knowledgeGraph:loadKnowledgeGraphStubData')
     outputs.file(reportsDir.map { it.file('graph-load-report.html') })
     doLast {
         def architectureReport = reportsDir.get().file('architecture-report.html').asFile
         def lineageReport = reportsDir.get().file('lineage-report.html').asFile
-        def neo4jStartReport = reportsDir.get().file('neo4j-start-report.html').asFile
-        requireFiles([architectureReport, lineageReport, neo4jStartReport])
+        def knowledgeGraphStartReport = reportsDir.get().file('knowledge-graph-start-report.html').asFile
+        def knowledgeGraphLoadReport = project(':knowledgeGraph').layout.buildDirectory.file('graph-report/load-report.json').get().asFile
+        requireFiles([architectureReport, lineageReport, knowledgeGraphStartReport, knowledgeGraphLoadReport])
         writeReport('graph-load-report.html', 'Graph Load Report', [
                 "architectureReport=${architectureReport.name}",
                 "lineageReport=${lineageReport.name}",
-                "neo4jStartReport=${neo4jStartReport.name}",
+                "knowledgeGraphStartReport=${knowledgeGraphStartReport.name}",
+                "knowledgeGraphLoadReport=${knowledgeGraphLoadReport}",
                 "status=loaded"
         ])
     }
@@ -109,19 +113,21 @@ tasks.register('loadKnowledgeGraph') {
 tasks.register('verifyKnowledgeGraph') {
     group = 'verification'
     description = 'Runs graph verification checks.'
-    dependsOn('loadKnowledgeGraph', ':neo4j:verifyKnowledgeGraphModel')
+    dependsOn('loadKnowledgeGraph', ':knowledgeGraph:verifyKnowledgeGraphModel')
     outputs.file(reportsDir.map { it.file('graph-report.html') })
     doLast {
         def graphLoadReport = reportsDir.get().file('graph-load-report.html').asFile
-        def neo4jReport = project(':neo4j').layout.buildDirectory.file('graph-report/verification-report.json').get().asFile
-        requireFiles([graphLoadReport, neo4jReport])
-        def verificationJson = neo4jReport.text
+        def knowledgeGraphReport = project(':knowledgeGraph').layout.buildDirectory.file('graph-report/verification-report.json').get().asFile
+        def knowledgeGraphDump = project(':knowledgeGraph').layout.buildDirectory.file('graph-report/graph-dump.json').get().asFile
+        requireFiles([graphLoadReport, knowledgeGraphReport, knowledgeGraphDump])
+        def verificationJson = knowledgeGraphReport.text
         if (!verificationJson.contains('"status": "pass"')) {
-            throw new GradleException("Neo4j verification report does not indicate pass: ${neo4jReport}")
+            throw new GradleException("Knowledge graph verification report does not indicate pass: ${knowledgeGraphReport}")
         }
         writeReport('graph-report.html', 'Graph Verification Report', [
                 "graphLoadReport=${graphLoadReport.name}",
-                "neo4jVerification=${neo4jReport}",
+                "knowledgeGraphVerification=${knowledgeGraphReport}",
+                "knowledgeGraphDump=${knowledgeGraphDump}",
                 "checks=expected-vertices,expected-relationships,table-lineage",
                 "status=pass"
         ])
