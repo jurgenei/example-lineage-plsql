@@ -22,6 +22,11 @@ subprojects {
 
         dependencies {
             spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.14.0'
+            constraints {
+                implementation('org.apache.commons:commons-lang3:3.20.0')
+                implementation('org.apache.logging.log4j:log4j-api:2.25.2')
+                implementation('org.apache.logging.log4j:log4j-to-slf4j:2.25.2')
+            }
         }
 
         spotbugs {
