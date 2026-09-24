@@ -1,10 +1,47 @@
 plugins {
     id 'base'
+    id 'org.owasp.dependencycheck' version '13.0.0' apply false
+    id 'com.github.spotbugs' version '6.5.11' apply false
 }
 
 allprojects {
     repositories {
         mavenCentral()
+    }
+}
+
+subprojects {
+    pluginManager.withPlugin('java') {
+        apply plugin: 'org.owasp.dependencycheck'
+        apply plugin: 'com.github.spotbugs'
+
+        dependencies {
+            spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.14.0'
+        }
+
+        dependencyCheck {
+            formats = ['HTML', 'JSON', 'XML']
+            failBuildOnCVSS = 7.0
+            skipConfigurations = ['spotbugs', 'spotbugsPlugins']
+            nvd {
+                apiKey = project.findProperty('org.owasp.dependencycheck.nvd.api.key') ?: System.getenv('NVD_API_KEY')
+            }
+        }
+
+        tasks.withType(com.github.spotbugs.snom.SpotBugsTask).configureEach {
+            ignoreFailures = providers.gradleProperty("spotbugsIgnoreFailures")
+                    .map { it.toBoolean() }
+                    .orElse(true)
+                    .get()
+            effort = 'default'
+            reportLevel = 'medium'
+            reports.create('html') {
+                required = true
+            }
+            reports.create('xml') {
+                required = false
+            }
+        }
     }
 }
 
