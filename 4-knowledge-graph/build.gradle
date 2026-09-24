@@ -23,11 +23,11 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-data-neo4j'
-    implementation 'org.testcontainers:neo4j:1.21.4'
-    implementation 'org.testcontainers:testcontainers:1.21.4'
+    implementation 'org.testcontainers:neo4j:2.0.5'
+    implementation 'org.testcontainers:testcontainers:2.0.5'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.testcontainers:junit-jupiter:1.21.4'
+    testImplementation 'org.testcontainers:junit-jupiter:2.0.5'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
