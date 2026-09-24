@@ -4,7 +4,7 @@ plugins {
     id 'com.github.spotbugs' version '6.5.11' apply false
 }
 
-version = '0.1.1'
+version = '0.1.2'
 group = 'name.jurgenei.example.lineage.plsql'
 
 allprojects {
@@ -36,6 +36,7 @@ subprojects {
         dependencyCheck {
             formats = ['HTML', 'JSON', 'XML']
             failBuildOnCVSS = 7.0
+            suppressionFile = rootProject.file('dependency-check-suppressions.xml').absolutePath
             skipConfigurations = ['spotbugs', 'spotbugsPlugins']
             nvd {
                 apiKey = project.findProperty('org.owasp.dependencycheck.nvd.api.key') ?: System.getenv('NVD_API_KEY')

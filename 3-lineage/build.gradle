@@ -7,8 +7,8 @@ plugins {
 group =  rootProject.group
 version = rootProject.version
 
-import name.jurgenei.gradle.antlr.XmlAstPlsqlGradleTask;
-import name.jurgenei.gradle.xml.XsltTask;
+import name.jurgenei.gradle.antlr.XmlAstPlsqlGradleTask
+import name.jurgenei.gradle.xml.XsltTask
 
 def configureParTask = { Object t ->
     t.executionModel.set('VIRTUAL_THREADS')
