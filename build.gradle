@@ -24,6 +24,10 @@ subprojects {
             spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.14.0'
         }
 
+        spotbugs {
+            toolVersion = '4.8.3'
+        }
+
         dependencyCheck {
             formats = ['HTML', 'JSON', 'XML']
             failBuildOnCVSS = 7.0
@@ -40,6 +44,7 @@ subprojects {
                     .get()
             effort = 'default'
             reportLevel = 'medium'
+            excludeFilter = rootProject.file('spotbugs-exclude.xml')
             reports.create('html') {
                 required = true
             }
