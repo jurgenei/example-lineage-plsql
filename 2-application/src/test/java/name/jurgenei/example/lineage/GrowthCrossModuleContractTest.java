@@ -41,8 +41,11 @@ class GrowthCrossModuleContractTest {
         Path root = ProjectRootPaths.root();
         String knowledgeGraphBuild = Files.readString(root.resolve(Path.of("4-knowledge-graph", "build.gradle")), StandardCharsets.UTF_8);
         String rootBuild = Files.readString(root.resolve("build.gradle"), StandardCharsets.UTF_8);
-        assertThat(knowledgeGraphBuild).contains("dependsOn(':architecture:assembleArchitectureModel', ':lineage:generateTableLineage')");
+        assertThat(knowledgeGraphBuild).contains("startKnowledgeGraphContainer");
+        assertThat(knowledgeGraphBuild).contains("loadKnowledgeGraphStubData");
+        assertThat(knowledgeGraphBuild).contains("dumpKnowledgeGraph");
         assertThat(knowledgeGraphBuild).contains("verification-report.json");
-        assertThat(rootBuild).contains("dependsOn('assembleArchitecture', 'generateLineage', 'startKnowledgeGraph')");
+        assertThat(knowledgeGraphBuild).contains("KnowledgeGraphFlowRunner");
+        assertThat(rootBuild).contains("dependsOn('assembleArchitecture', 'generateLineage', 'startKnowledgeGraph', ':knowledgeGraph:loadKnowledgeGraphStubData')");
     }
 }
