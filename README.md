@@ -22,16 +22,15 @@ Many lineage examples produce diagrams.
 
 This repository demonstrates a complete and executable lineage lifecycle:
 
-```text
-Architecture Intent
-        +
-Implementation Reality
-                |
-                v
-         Derived Knowledge
-                |
-                v
-        Verifiable Lineage
+```mermaid
+flowchart LR
+    A[Architecture Intent]
+    B[Implementation Reality]
+    C[Derived Knowledge]
+    D[Verifiable Lineage]
+    A --> C
+    B --> C
+    C --> D
 ```
 
 Every lineage assertion should:
@@ -69,29 +68,15 @@ This repository focuses on demonstrating those ideas through running software an
 
 # What Gets Built
 
-```text
-ArchiMate Model
-        |
-        v
-Architecture Export
-        |
-        v
-Liquibase Deployment
-        |
-        v
-Oracle Schema
-        |
-        v
-PL/SQL Procedures
-        |
-        v
-Lineage Artifacts
-        |
-        v
-Neo4j Knowledge Graph
-        |
-        v
-Verification Reports
+```mermaid
+flowchart TB
+    A[ArchiMate Model] --> B[Architecture Export]
+    B --> C[Liquibase Deployment]
+    C --> D[Oracle Schema]
+    D --> E[PL/SQL Procedures]
+    E --> F[Lineage Artifacts]
+    F --> G[Neo4j Knowledge Graph]
+    G --> H[Verification Reports]
 ```
 
 ---
@@ -157,24 +142,20 @@ Validate expected relationships and lineage paths.
 
 # Repository Structure
 
-```text
-example-lineage-plsql
-│
-├── 1-architecture
-│   └── Architecture intent exports
-│
-├── 2-application
-│   ├── Spring Boot runtime
-│   ├── Liquibase assets
-│   └── PL/SQL assets under analysis
-│
-├── 3-lineage
-│   └── Generated lineage artifacts
-│
-├── 4-knowledge-graph
-│   └── Neo4j publication and verification
-│
-└── .github/workflows
+```mermaid
+flowchart LR
+    R[example-lineage-plsql]
+    R --> A[1-architecture]
+    A --> A1[Architecture intent exports]
+    R --> B[2-application]
+    B --> B1[Spring Boot runtime]
+    B --> B2[Liquibase assets]
+    B --> B3[PL/SQL assets under analysis]
+    R --> C[3-lineage]
+    C --> C1[Generated lineage artifacts]
+    R --> D[4-knowledge-graph]
+    D --> D1[Neo4j publication and verification]
+    R --> E[.github/workflows]
 ```
 
 ---
@@ -249,24 +230,26 @@ The project grows incrementally from structure validation toward full end-to-end
 
 ## Root Reports
 
-```text
-build/reports/
-├── architecture-report.html
-├── lineage-report.html
-├── knowledge-graph-start-report.html
-├── graph-load-report.html
-├── graph-report.html
-└── end-to-end-report.html
+```mermaid
+flowchart LR
+    R[build/reports]
+    R --> R1[architecture-report.html]
+    R --> R2[lineage-report.html]
+    R --> R3[knowledge-graph-start-report.html]
+    R --> R4[graph-load-report.html]
+    R --> R5[graph-report.html]
+    R --> R6[end-to-end-report.html]
 ```
 
 ## Knowledge Graph Reports
 
-```text
-4-knowledge-graph/build/graph-report/
-├── container-start-report.json
-├── load-report.json
-├── graph-dump.json
-└── verification-report.json
+```mermaid
+flowchart LR
+    G[4-knowledge-graph/build/graph-report]
+    G --> G1[container-start-report.json]
+    G --> G2[load-report.json]
+    G --> G3[graph-dump.json]
+    G --> G4[verification-report.json]
 ```
 
 ---
@@ -323,16 +306,12 @@ Run graph verification:
 
 A successful build should prove that:
 
-```text
-Architecture intent
-        ↓
-Deployment artifacts
-        ↓
-Derived lineage
-        ↓
-Knowledge graph
-        ↓
-Expected relationships
+```mermaid
+flowchart TD
+    A[Architecture intent] --> B[Deployment artifacts]
+    B --> C[Derived lineage]
+    C --> D[Knowledge graph]
+    D --> E[Expected relationships]
 ```
 
 remain consistent and verifiable.
