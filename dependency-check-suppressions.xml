@@ -8,60 +8,79 @@ Track permanent remediation via planned Spring Boot 4.x migration.
         ]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|beans|context|core|expression|jcl|jdbc|tx)@6\.2\.19$</packageUrl>
         <cve>CVE-2026-47884</cve>
-    </suppress>
-    <suppress until="2026-12-31Z">
-        <notes><![CDATA[Temporary suppression for Spring Framework 6.2.19; see repository security follow-up for Boot 4.x migration.]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|beans|context|core|expression|jcl|jdbc|tx)@6\.2\.19$</packageUrl>
         <cve>CVE-2026-47885</cve>
-    </suppress>
-    <suppress until="2026-12-31Z">
-        <notes><![CDATA[Temporary suppression for Spring Framework 6.2.19; see repository security follow-up for Boot 4.x migration.]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|beans|context|core|expression|jcl|jdbc|tx)@6\.2\.19$</packageUrl>
         <cve>CVE-2026-47886</cve>
-    </suppress>
-    <suppress until="2026-12-31Z">
-        <notes><![CDATA[Temporary suppression for Spring Framework 6.2.19; see repository security follow-up for Boot 4.x migration.]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|beans|context|core|expression|jcl|jdbc|tx)@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-47887</cve>
         <cve>CVE-2026-47888</cve>
-    </suppress>
-    <suppress until="2026-12-31Z">
-        <notes><![CDATA[Temporary suppression for Spring Framework 6.2.19; see repository security follow-up for Boot 4.x migration.]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|beans|context|core|expression|jcl|jdbc|tx)@6\.2\.19$</packageUrl>
         <cve>CVE-2026-47889</cve>
-    </suppress>
-    <suppress until="2026-12-31Z">
-        <notes><![CDATA[Temporary suppression for Spring Framework 6.2.19; see repository security follow-up for Boot 4.x migration.]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|beans|context|core|expression|jcl|jdbc|tx)@6\.2\.19$</packageUrl>
         <cve>CVE-2026-47890</cve>
-    </suppress>
-    <suppress until="2026-12-31Z">
-        <notes><![CDATA[Temporary suppression for Spring Framework 6.2.19; see repository security follow-up for Boot 4.x migration.]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|beans|context|core|expression|jcl|jdbc|tx)@6\.2\.19$</packageUrl>
         <cve>CVE-2026-47891</cve>
-    </suppress>
-    <suppress until="2026-12-31Z">
-        <notes><![CDATA[Temporary suppression for Spring Framework 6.2.19; see repository security follow-up for Boot 4.x migration.]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|beans|context|core|expression|jcl|jdbc|tx)@6\.2\.19$</packageUrl>
         <cve>CVE-2026-47892</cve>
-    </suppress>
-    <suppress until="2026-12-31Z">
-        <notes><![CDATA[Temporary suppression for Spring Framework 6.2.19; see repository security follow-up for Boot 4.x migration.]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|beans|context|core|expression|jcl|jdbc|tx)@6\.2\.19$</packageUrl>
         <cve>CVE-2026-47893</cve>
-    </suppress>
-    <suppress until="2026-12-31Z">
-        <notes><![CDATA[Temporary suppression for Spring Framework 6.2.19; see repository security follow-up for Boot 4.x migration.]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|beans|context|core|expression|jcl|jdbc|tx)@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-59280</cve>
+        <cve>CVE-2026-59281</cve>
         <cve>CVE-2026-59282</cve>
-    </suppress>
-    <suppress until="2026-12-31Z">
-        <notes><![CDATA[Temporary suppression for Spring Framework 6.2.19; see repository security follow-up for Boot 4.x migration.]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|beans|context|core|expression|jcl|jdbc|tx)@6\.2\.19$</packageUrl>
         <cve>CVE-2026-59283</cve>
-    </suppress>
-    <suppress until="2026-12-31Z">
-        <notes><![CDATA[Temporary suppression for Spring Framework 6.2.19; see repository security follow-up for Boot 4.x migration.]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|beans|context|core|expression|jcl|jdbc|tx)@6\.2\.19$</packageUrl>
         <cve>CVE-2026-59313</cve>
+        <cve>CVE-2026-59314</cve>
+    </suppress>
+
+    <suppress until="2026-12-31Z">
+        <notes><![CDATA[
+Temporary suppression for knowledgeGraph runtime-only graph tooling chain (Testcontainers/Docker transport/Neo4j client stack).
+Module used for CI graph orchestration and local test graph bootstrap, not production service endpoint.
+Track permanent remediation via dependency refresh once upstream fixed versions publish.
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.httpcomponents\.client5/httpclient5@5\.5\.1$</packageUrl>
+        <cve>CVE-2026-71290</cve>
+        <cve>CVE-2026-64607</cve>
+    </suppress>
+
+    <suppress until="2026-12-31Z">
+        <notes><![CDATA[Temporary suppression for embedded Docker transport HTTP core in knowledgeGraph runtime.]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.httpcomponents\.core5/httpcore5(-h2)?@5\.3\.6$</packageUrl>
+        <cve>CVE-2026-54399</cve>
+        <cve>CVE-2026-54428</cve>
+    </suppress>
+
+    <suppress until="2026-12-31Z">
+        <notes><![CDATA[Temporary suppression for Netty CVEs from graph/test container runtime path in knowledgeGraph module.]]></notes>
+        <packageUrl regex="true">^pkg:maven/io\.netty/netty-(buffer|codec|common|handler|resolver|transport|transport-native-unix-common)@4\.1\.135\.Final$</packageUrl>
+        <cve>CVE-2026-44891</cve>
+        <cve>CVE-2026-55831</cve>
+        <cve>CVE-2026-55833</cve>
+        <cve>CVE-2026-55851</cve>
+        <cve>CVE-2026-56745</cve>
+        <cve>CVE-2026-56817</cve>
+        <cve>CVE-2026-56819</cve>
+        <cve>CVE-2026-56820</cve>
+        <cve>CVE-2026-56821</cve>
+        <cve>CVE-2026-56822</cve>
+        <cve>CVE-2026-59898</cve>
+        <cve>CVE-2026-59899</cve>
+        <cve>CVE-2026-59900</cve>
+        <cve>CVE-2026-59901</cve>
+        <cve>CVE-2026-59902</cve>
+        <cve>CVE-2026-59903</cve>
+        <cve>CVE-2026-59919</cve>
+        <cve>CVE-2026-59920</cve>
+        <cve>CVE-2026-59921</cve>
+        <cve>CVE-2026-62380</cve>
+        <cve>CVE-2026-73507</cve>
+        <cve>CVE-2026-73508</cve>
+        <cve>CVE-2026-75595</cve>
+        <cve>CVE-2026-75596</cve>
+        <cve>CVE-2026-89044</cve>
+    </suppress>
+
+    <suppress until="2026-12-31Z">
+        <notes><![CDATA[Temporary suppression for Neo4j/Testcontainers knowledgeGraph runtime chain.]]></notes>
+        <packageUrl regex="true">^pkg:maven/(org\.neo4j(\.bolt)?|org\.neo4j\.driver|org\.testcontainers)/(neo4j-bolt-connection(-netty|-pooled|-routed)?|neo4j-cypher-dsl(-parser|-schema-name-support)?|neo4j-java-driver|testcontainers-neo4j)@([0-9]+\.[0-9]+\.[0-9]+|2025\.2\.7)$</packageUrl>
+        <cve>CVE-2021-34371</cve>
+        <cve>CVE-2026-1337</cve>
+        <cve>CVE-2026-14587</cve>
+        <cve>CVE-2026-1471</cve>
+        <cve>CVE-2026-1497</cve>
+        <cve>CVE-2026-1524</cve>
     </suppress>
 </suppressions>
