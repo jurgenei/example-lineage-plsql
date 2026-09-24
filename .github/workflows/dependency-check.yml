@@ -73,5 +73,12 @@ jobs:
       - name: Dependency-Check summary
         if: always()
         run: |
+          SUPPRESSION_RULES=$(grep -c "<suppress " dependency-check-suppressions.xml || true)
+          SUPPRESSED_FINDINGS=$(grep -Rho "<suppressed>true</suppressed>" 2-application/build/reports/dependency-check-report.xml 4-knowledge-graph/build/reports/dependency-check-report.xml 2>/dev/null | wc -l | tr -d ' ')
+          SUPPRESSION_SHA=$(sha256sum dependency-check-suppressions.xml | awk '{print $1}')
           echo "### OWASP Dependency-Check" >> "$GITHUB_STEP_SUMMARY"
           echo "- Reports uploaded as workflow artifacts." >> "$GITHUB_STEP_SUMMARY"
+          echo "- Configured suppression rules: ${SUPPRESSION_RULES}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Suppressed findings in reports: ${SUPPRESSED_FINDINGS}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Suppression file: dependency-check-suppressions.xml" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Suppression SHA-256: ${SUPPRESSION_SHA}" >> "$GITHUB_STEP_SUMMARY"
