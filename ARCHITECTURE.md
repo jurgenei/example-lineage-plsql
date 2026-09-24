@@ -1,7 +1,7 @@
 # Architecture Overview example-lineage-plsql
 
 ```mermaid
-flowchart LR
+flowchart TB
 
 subgraph group_app["Application model"]
   node_appmodel["Application and PL/SQL"]
