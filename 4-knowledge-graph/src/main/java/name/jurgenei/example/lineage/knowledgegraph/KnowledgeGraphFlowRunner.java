@@ -1,5 +1,6 @@
 package name.jurgenei.example.lineage.knowledgegraph;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -69,9 +70,12 @@ public final class KnowledgeGraphFlowRunner {
                 }
                 """.formatted(Instant.now(), neo4j.getDockerImageName(), neo4j.getBoltUrl());
         try {
-            Files.createDirectories(outputFile.getParent());
+            Path parent = outputFile.getParent();
+            if (parent != null) {
+                Files.createDirectories(parent);
+            }
             Files.writeString(outputFile, content, StandardCharsets.UTF_8);
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new IllegalStateException("Unable to write container start report", e);
         }
     }

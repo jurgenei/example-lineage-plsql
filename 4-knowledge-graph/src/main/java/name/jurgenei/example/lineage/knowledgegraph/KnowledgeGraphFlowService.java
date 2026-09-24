@@ -138,7 +138,10 @@ public class KnowledgeGraphFlowService {
 
     private void writeText(Path outputFile, String content) {
         try {
-            Files.createDirectories(outputFile.getParent());
+            Path parent = outputFile.getParent();
+            if (parent != null) {
+                Files.createDirectories(parent);
+            }
             Files.writeString(outputFile, content, StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new IllegalStateException("Unable to write output file: " + outputFile, e);
