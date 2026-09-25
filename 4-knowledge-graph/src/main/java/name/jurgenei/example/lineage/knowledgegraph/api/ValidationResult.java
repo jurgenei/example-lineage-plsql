@@ -6,6 +6,15 @@ public record ValidationResult(
         String status,
         List<String> errors
 ) {
+    public ValidationResult {
+        errors = List.copyOf(errors);
+    }
+
+    @Override
+    public List<String> errors() {
+        return List.copyOf(errors);
+    }
+
     public static ValidationResult valid() {
         return new ValidationResult("VALID", List.of());
     }

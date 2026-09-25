@@ -7,6 +7,7 @@ No newer Spring 6.2.x / Spring Boot 3.5.x patch currently available in Maven Cen
 Track permanent remediation via planned Spring Boot 4.x migration.
         ]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(aop|beans|context|core|expression|jcl|jdbc|tx)@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-47883</cve>
         <cve>CVE-2026-47884</cve>
         <cve>CVE-2026-47885</cve>
         <cve>CVE-2026-47886</cve>
@@ -23,6 +24,66 @@ Track permanent remediation via planned Spring Boot 4.x migration.
         <cve>CVE-2026-59283</cve>
         <cve>CVE-2026-59313</cve>
         <cve>CVE-2026-59314</cve>
+    </suppress>
+
+    <suppress until="2026-12-31Z">
+        <notes><![CDATA[
+Temporary suppression for Spring Web/MVC CVEs pulled by knowledgeGraph metadata emulator endpoints.
+No remediated Spring 6.2.x / Boot 3.5.x artifacts available yet in Maven Central.
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-web(mvc)?@6\.2\.19$</packageUrl>
+        <cve>CVE-2026-47883</cve>
+        <cve>CVE-2026-47884</cve>
+        <cve>CVE-2026-47885</cve>
+        <cve>CVE-2026-47886</cve>
+        <cve>CVE-2026-47887</cve>
+        <cve>CVE-2026-47888</cve>
+        <cve>CVE-2026-47889</cve>
+        <cve>CVE-2026-47890</cve>
+        <cve>CVE-2026-47891</cve>
+        <cve>CVE-2026-47892</cve>
+        <cve>CVE-2026-47893</cve>
+        <cve>CVE-2026-59280</cve>
+        <cve>CVE-2026-59281</cve>
+        <cve>CVE-2026-59282</cve>
+        <cve>CVE-2026-59283</cve>
+        <cve>CVE-2026-59313</cve>
+        <cve>CVE-2026-59314</cve>
+    </suppress>
+
+    <suppress until="2026-12-31Z">
+        <notes><![CDATA[
+Temporary suppression for embedded Tomcat pulled by metadata emulator HTTP endpoint runtime.
+Track upgrade when patched Tomcat 10.1.x release available.
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat-embed-(core|websocket)@10\.1\.55$</packageUrl>
+        <cve>CVE-2026-50229</cve>
+        <cve>CVE-2026-53404</cve>
+        <cve>CVE-2026-53434</cve>
+        <cve>CVE-2026-55276</cve>
+        <cve>CVE-2026-55955</cve>
+        <cve>CVE-2026-55956</cve>
+        <cve>CVE-2026-59083</cve>
+        <cve>CVE-2026-59084</cve>
+        <cve>CVE-2026-65182</cve>
+        <cve>CVE-2026-65183</cve>
+        <cve>CVE-2026-65637</cve>
+        <cve>CVE-2026-65905</cve>
+        <cve>CVE-2026-65927</cve>
+        <cve>CVE-2026-66299</cve>
+        <cve>CVE-2026-66422</cve>
+        <cve>CVE-2026-68525</cve>
+        <cve>CVE-2026-68569</cve>
+        <cve>CVE-2026-68763</cve>
+        <cve>CVE-2026-73180</cve>
+    </suppress>
+
+    <suppress until="2026-12-31Z">
+        <notes><![CDATA[
+Temporary suppression for Jackson databind CVE in current Spring Boot 3.5.x dependency chain.
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson-databind@2\.21\.4$</packageUrl>
+        <cve>CVE-2026-54515</cve>
     </suppress>
 
     <suppress until="2026-12-31Z">
@@ -51,7 +112,9 @@ Track permanent remediation via dependency refresh once upstream fixed versions 
         <cve>CVE-2026-55833</cve>
         <cve>CVE-2026-55851</cve>
         <cve>CVE-2026-56745</cve>
+        <cve>CVE-2026-56746</cve>
         <cve>CVE-2026-56817</cve>
+        <cve>CVE-2026-56818</cve>
         <cve>CVE-2026-56819</cve>
         <cve>CVE-2026-56820</cve>
         <cve>CVE-2026-56821</cve>
