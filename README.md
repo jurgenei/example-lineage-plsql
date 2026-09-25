@@ -166,7 +166,7 @@ flowchart LR
     R --> C[3-lineage]
     C --> C1[Generated lineage artifacts]
     R --> D[4-knowledge-graph]
-    D --> D1[Neo4j publication and verification]
+    D --> D1[Neo4j publication, verification, metadata API emulator]
     R --> E[.github/workflows]
 ```
 
@@ -299,6 +299,12 @@ Run graph verification:
 
 ```bash
 ./gradlew verifyKnowledgeGraph endToEndTest
+```
+
+Run module-isolated metadata API and graph tests:
+
+```bash
+./gradlew :knowledgeGraph:test
 ```
 
 ---
