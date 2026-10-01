@@ -89,7 +89,7 @@ tasks.register('assembleArchitecture') {
         def exportDir = project(':architecture').layout.buildDirectory.dir('archi-export').get().asFile
         def pdfDir = new File(exportDir, 'pdf')
         requireFiles([
-                new File(exportDir, 'test-lineage.sexpr'),
+                new File(exportDir, 'test-lineage.xir'),
                 new File(exportDir, 'test-lineage.xlsx')
         ])
         def pdfFiles = (pdfDir.listFiles() ?: [] as File[]).findAll { it.isFile() && it.name.endsWith('.pdf') }

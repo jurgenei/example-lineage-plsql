@@ -10,7 +10,7 @@ version = rootProject.version
 def archimateInput = file('src/main/resources/archimate/test-lineage.archimate')
 def archiExportDir = layout.buildDirectory.dir('archi-export')
 def archiXmlOutput = layout.buildDirectory.file('archi-export/test-lineage.export.xml')
-def archiModelXmlOutput = layout.buildDirectory.file('archi-export/test-lineage.sexpr')
+def archiModelXmlOutput = layout.buildDirectory.file('archi-export/test-lineage.xir')
 def archiXlsxOutput = layout.buildDirectory.file('archi-export/test-lineage.xlsx')
 def obsoleteExportDir = layout.buildDirectory.dir('archimate-export')
 
