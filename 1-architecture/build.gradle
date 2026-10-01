@@ -1,7 +1,7 @@
 plugins {
     id 'base'
-    id 'name.jurgenei.gradle.archi' version '0.1.10'
-    id 'name.jurgenei.gradle.xml' version '0.1.11'
+    id 'name.jurgenei.gradle.archi'
+    id 'name.jurgenei.gradle.xml'
 }
 
 group =  rootProject.group
@@ -10,7 +10,7 @@ version = rootProject.version
 def archimateInput = file('src/main/resources/archimate/test-lineage.archimate')
 def archiExportDir = layout.buildDirectory.dir('archi-export')
 def archiXmlOutput = layout.buildDirectory.file('archi-export/test-lineage.export.xml')
-def archiModelXmlOutput = layout.buildDirectory.file('archi-export/test-lineage.sexpr')
+def archiModelXmlOutput = layout.buildDirectory.file('archi-export/test-lineage.xir')
 def archiXlsxOutput = layout.buildDirectory.file('archi-export/test-lineage.xlsx')
 def obsoleteExportDir = layout.buildDirectory.dir('archimate-export')
 
@@ -29,7 +29,7 @@ tasks.register('transformArchiModel', name.jurgenei.gradle.xml.XsltTask) {
     style 'src/main/resources/xsl/archi2model.xsl'
     input archiXmlOutput.get().asFile
     output archiModelXmlOutput.get().asFile
-    sexprFormat.set("beautified")
+    xirFormat.set("beautified")
 }
 
 tasks.register('assembleArchitectureModel') {

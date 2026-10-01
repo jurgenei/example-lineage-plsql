@@ -2,9 +2,12 @@ plugins {
     id 'base'
     id 'org.owasp.dependencycheck' version '13.0.0' apply false
     id 'com.github.spotbugs' version '6.5.11' apply false
+    id 'name.jurgenei.gradle.archi' version '0.1.10' apply false
+    id 'name.jurgenei.gradle.xml' version '0.1.13' apply false
+    id 'name.jurgenei.gradle.antlr.plsql' version '0.1.5' apply false
 }
 
-version = '0.1.3'
+version = '0.1.5'
 group = 'name.jurgenei.example.lineage.plsql'
 
 allprojects {
@@ -86,7 +89,7 @@ tasks.register('assembleArchitecture') {
         def exportDir = project(':architecture').layout.buildDirectory.dir('archi-export').get().asFile
         def pdfDir = new File(exportDir, 'pdf')
         requireFiles([
-                new File(exportDir, 'test-lineage.sexpr'),
+                new File(exportDir, 'test-lineage.xir'),
                 new File(exportDir, 'test-lineage.xlsx')
         ])
         def pdfFiles = (pdfDir.listFiles() ?: [] as File[]).findAll { it.isFile() && it.name.endsWith('.pdf') }
