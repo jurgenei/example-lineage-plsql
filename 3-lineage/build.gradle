@@ -1,7 +1,7 @@
 plugins {
     id 'base'
-    id 'name.jurgenei.gradle.antlr.plsql' version '0.1.4'
-    id 'name.jurgenei.gradle.xml' version '0.1.11'
+    id 'name.jurgenei.gradle.antlr.plsql'
+    id 'name.jurgenei.gradle.xml'
 }
 
 group =  rootProject.group
@@ -16,8 +16,8 @@ def configureParTask = { Object t ->
     t.aggressiveGc.set(true)
     t.gcEveryFiles.set(20)
     t.gcHeapThresholdPercent.set(80)
-    t.targetExtension.set('.sexpr')
-    t.sexprFormat.set('beautified')
+    t.targetExtension.set('.xir')
+    t.xirFormat.set('beautified')
     t.continueOnError.set(true)
 }
 
@@ -62,9 +62,9 @@ tasks.register('extract', XsltTask) {
     dependsOn('ast')
     style 'src/main/xsl/extract.xsl'
     source(fileTree(astDir) {
-        include '**/*.sexpr'
+        include '**/*.xir'
     })
-    outputExtension.set('.sexpr')
+    outputExtension.set('.xir')
     sexprFormat.set('beautified')
     outputDir.set(file(extractDir))
     // workers.set(4)

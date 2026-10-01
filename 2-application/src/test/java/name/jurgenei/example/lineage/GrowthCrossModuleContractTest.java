@@ -17,7 +17,7 @@ class GrowthCrossModuleContractTest {
         assertThat(architectureBuild).contains("name.jurgenei.gradle.archi");
         assertThat(architectureBuild).contains("name.jurgenei.gradle.xml");
         assertThat(architectureBuild).contains("test-lineage.export.xml");
-        assertThat(architectureBuild).contains("test-lineage.sexpr");
+        assertThat(architectureBuild).contains("test-lineage.xir");
         assertThat(architectureBuild).contains("test-lineage.xlsx");
         assertThat(architectureBuild).contains("archi-export/pdf");
     }
