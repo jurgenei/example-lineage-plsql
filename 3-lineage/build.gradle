@@ -65,7 +65,7 @@ tasks.register('extract', XsltTask) {
         include '**/*.xir'
     })
     outputExtension.set('.xir')
-    sexprFormat.set('beautified')
+    xirFormat.set('beautified')
     outputDir.set(file(extractDir))
     // workers.set(4)
 }

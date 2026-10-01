@@ -29,7 +29,7 @@ tasks.register('transformArchiModel', name.jurgenei.gradle.xml.XsltTask) {
     style 'src/main/resources/xsl/archi2model.xsl'
     input archiXmlOutput.get().asFile
     output archiModelXmlOutput.get().asFile
-    sexprFormat.set("beautified")
+    xirFormat.set("beautified")
 }
 
 tasks.register('assembleArchitectureModel') {

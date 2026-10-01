@@ -3,11 +3,11 @@ plugins {
     id 'org.owasp.dependencycheck' version '13.0.0' apply false
     id 'com.github.spotbugs' version '6.5.11' apply false
     id 'name.jurgenei.gradle.archi' version '0.1.10' apply false
-    id 'name.jurgenei.gradle.xml' version '0.1.12' apply false
+    id 'name.jurgenei.gradle.xml' version '0.1.13' apply false
     id 'name.jurgenei.gradle.antlr.plsql' version '0.1.5' apply false
 }
 
-version = '0.1.4'
+version = '0.1.5'
 group = 'name.jurgenei.example.lineage.plsql'
 
 allprojects {
