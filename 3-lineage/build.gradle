@@ -1,7 +1,7 @@
 plugins {
     id 'base'
     id 'name.jurgenei.gradle.antlr.plsql' version '0.1.4'
-    id 'name.jurgenei.gradle.xml' version '0.1.11'
+    id 'name.jurgenei.gradle.xml' version '0.1.12'
 }
 
 group =  rootProject.group
