@@ -1,6 +1,6 @@
 plugins {
     id 'base'
-    id 'name.jurgenei.gradle.antlr.plsql' version '0.1.4'
+    id 'name.jurgenei.gradle.antlr.plsql' version '0.1.7'
     id 'name.jurgenei.gradle.xml' version '0.1.11'
 }
 
