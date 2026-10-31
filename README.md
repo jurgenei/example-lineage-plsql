@@ -1,13 +1,13 @@
 # example-lineage-plsql
 
 ![Conformance](https://img.shields.io/badge/Conformance-Check--All%20Passing-brightgreen)
-[![Build and Test](https://github.com/jurgenei/example-lineage-plsql/actions/workflows/ci.yml/badge.svg)](https://github.com/jurgenei/example-lineage-plsql/actions/workflows/ci.yml)
-[![Coverage CI](https://github.com/jurgenei/example-lineage-plsql/actions/workflows/coverage.yml/badge.svg)](https://github.com/jurgenei/example-lineage-plsql/actions/workflows/coverage.yml)
-[![CodeQL](https://github.com/jurgenei/example-lineage-plsql/actions/workflows/codeql.yml/badge.svg)](https://github.com/jurgenei/example-lineage-plsql/actions/workflows/codeql.yml)
-[![Dependency Check](https://github.com/jurgenei/example-lineage-plsql/actions/workflows/dependency-check.yml/badge.svg)](https://github.com/jurgenei/example-lineage-plsql/actions/workflows/dependency-check.yml)
-[![SpotBugs Security](https://github.com/jurgenei/example-lineage-plsql/actions/workflows/spotbugs-security.yml/badge.svg)](https://github.com/jurgenei/example-lineage-plsql/actions/workflows/spotbugs-security.yml)
-[![Dependabot](https://img.shields.io/badge/dependabot-enabled-025E8C?logo=dependabot)](https://github.com/jurgenei/example-lineage-plsql/security/dependabot)
-[![Coverage](https://codecov.io/gh/jurgenei/example-lineage-plsql/graph/badge.svg)](https://codecov.io/gh/jurgenei/example-lineage-plsql)
+[![Build and Test](https://github.com/flowdigger/example-lineage-plsql/actions/workflows/ci.yml/badge.svg)](https://github.com/flowdigger/example-lineage-plsql/actions/workflows/ci.yml)
+[![Coverage CI](https://github.com/flowdigger/example-lineage-plsql/actions/workflows/coverage.yml/badge.svg)](https://github.com/flowdigger/example-lineage-plsql/actions/workflows/coverage.yml)
+[![CodeQL](https://github.com/flowdigger/example-lineage-plsql/actions/workflows/codeql.yml/badge.svg)](https://github.com/flowdigger/example-lineage-plsql/actions/workflows/codeql.yml)
+[![Dependency Check](https://github.com/flowdigger/example-lineage-plsql/actions/workflows/dependency-check.yml/badge.svg)](https://github.com/flowdigger/example-lineage-plsql/actions/workflows/dependency-check.yml)
+[![SpotBugs Security](https://github.com/flowdigger/example-lineage-plsql/actions/workflows/spotbugs-security.yml/badge.svg)](https://github.com/flowdigger/example-lineage-plsql/actions/workflows/spotbugs-security.yml)
+[![Dependabot](https://img.shields.io/badge/dependabot-enabled-025E8C?logo=dependabot)](https://github.com/flowdigger/example-lineage-plsql/security/dependabot)
+[![Coverage](https://codecov.io/gh/flowdigger/example-lineage-plsql/graph/badge.svg)](https://codecov.io/gh/flowdigger/example-lineage-plsql)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Java](https://img.shields.io/badge/java-21+-green.svg)](https://www.oracle.com/java/)
 [![Gradle](https://img.shields.io/badge/gradle-8+-blue.svg)](https://gradle.org/)
@@ -60,7 +60,7 @@ The repository is intended as:
 
 ---
 
-# Relationship to the Jurgenei Initiative
+# Relationship to the Flowdigger Initiative
 
 This repository is the executable reference implementation.
 
@@ -72,7 +72,7 @@ Broader concepts such as:
 - Canonical Enterprise Graphs
 - Enterprise Knowledge Compilation
 
-belong in the `jurgenei` repository.
+belong in the `flowdigger` repository.
 
 This repository focuses on demonstrating those ideas through running software and verifiable results.
 
@@ -284,15 +284,15 @@ Coverage is generated through JaCoCo and published via Codecov.
 Run staged growth tests:
 
 ```bash
-./gradlew :application:test --tests name.jurgenei.example.lineage.GrowthStructureBootstrapTest
-./gradlew :application:test --tests name.jurgenei.example.lineage.GrowthCrossModuleContractTest
-./gradlew :application:test --tests name.jurgenei.example.lineage.GrowthEndToEndGraphVerificationContractTest
+./gradlew :application:test --tests name.flowdigger.example.lineage.GrowthStructureBootstrapTest
+./gradlew :application:test --tests name.flowdigger.example.lineage.GrowthCrossModuleContractTest
+./gradlew :application:test --tests name.flowdigger.example.lineage.GrowthEndToEndGraphVerificationContractTest
 ```
 
 Run Oracle integration tests:
 
 ```bash
-./gradlew :application:test --tests name.jurgenei.example.lineage.LineageLoaderIntegrationTest
+./gradlew :application:test --tests name.flowdigger.example.lineage.LineageLoaderIntegrationTest
 ```
 
 Run graph verification:
