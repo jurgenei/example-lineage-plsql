@@ -42,7 +42,7 @@ tasks.register('startKnowledgeGraphContainer', JavaExec) {
     group = 'lineage'
     description = 'Starts ephemeral Neo4j testcontainer and writes startup report.'
     classpath = sourceSets.main.runtimeClasspath
-    mainClass = 'name.jurgenei.example.lineage.knowledgegraph.KnowledgeGraphFlowRunner'
+    mainClass = 'org.flowdigger.example.lineage.knowledgegraph.KnowledgeGraphFlowRunner'
     args = ['start', reportDir.get().asFile.absolutePath]
     outputs.file(reportDir.map { it.file('container-start-report.json') })
 }
@@ -51,7 +51,7 @@ tasks.register('loadKnowledgeGraphStubData', JavaExec) {
     group = 'lineage'
     description = 'Loads stub lineage graph into ephemeral Neo4j testcontainer.'
     classpath = sourceSets.main.runtimeClasspath
-    mainClass = 'name.jurgenei.example.lineage.knowledgegraph.KnowledgeGraphFlowRunner'
+    mainClass = 'org.flowdigger.example.lineage.knowledgegraph.KnowledgeGraphFlowRunner'
     args = ['load', reportDir.get().asFile.absolutePath]
     outputs.file(reportDir.map { it.file('load-report.json') })
 }
@@ -60,7 +60,7 @@ tasks.register('dumpKnowledgeGraph', JavaExec) {
     group = 'lineage'
     description = 'Loads stub data and dumps deterministic graph snapshot.'
     classpath = sourceSets.main.runtimeClasspath
-    mainClass = 'name.jurgenei.example.lineage.knowledgegraph.KnowledgeGraphFlowRunner'
+    mainClass = 'org.flowdigger.example.lineage.knowledgegraph.KnowledgeGraphFlowRunner'
     args = ['dump', reportDir.get().asFile.absolutePath]
     outputs.file(reportDir.map { it.file('graph-dump.json') })
 }
@@ -69,7 +69,7 @@ tasks.register('verifyKnowledgeGraphModel', JavaExec) {
     group = 'lineage'
     description = 'Verifies expected graph edges using Spring Boot Neo4j client and Testcontainers.'
     classpath = sourceSets.main.runtimeClasspath
-    mainClass = 'name.jurgenei.example.lineage.knowledgegraph.KnowledgeGraphFlowRunner'
+    mainClass = 'org.flowdigger.example.lineage.knowledgegraph.KnowledgeGraphFlowRunner'
     args = ['verify', reportDir.get().asFile.absolutePath]
     outputs.file(reportDir.map { it.file('verification-report.json') })
 }

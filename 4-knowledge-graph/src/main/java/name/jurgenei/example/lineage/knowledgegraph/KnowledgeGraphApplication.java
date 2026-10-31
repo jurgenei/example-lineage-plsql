@@ -1,4 +1,4 @@
-package name.jurgenei.example.lineage.knowledgegraph;
+package org.flowdigger.example.lineage.knowledgegraph;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

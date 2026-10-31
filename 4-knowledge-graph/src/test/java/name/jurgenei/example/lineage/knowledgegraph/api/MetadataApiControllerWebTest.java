@@ -1,4 +1,4 @@
-package name.jurgenei.example.lineage.knowledgegraph.api;
+package org.flowdigger.example.lineage.knowledgegraph.api;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;

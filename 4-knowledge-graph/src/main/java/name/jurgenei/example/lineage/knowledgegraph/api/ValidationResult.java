@@ -1,4 +1,4 @@
-package name.jurgenei.example.lineage.knowledgegraph.api;
+package org.flowdigger.example.lineage.knowledgegraph.api;
 
 import java.util.List;
 

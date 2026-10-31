@@ -1,4 +1,4 @@
-package name.jurgenei.example.lineage.knowledgegraph.api;
+package org.flowdigger.example.lineage.knowledgegraph.api;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

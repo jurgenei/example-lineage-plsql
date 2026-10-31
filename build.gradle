@@ -9,7 +9,7 @@ plugins {
 }
 
 version = '0.1.3'
-group = 'name.jurgenei.example.lineage.plsql'
+group = 'org.flowdigger.example.lineage.plsql'
 
 allprojects {
     repositories {
