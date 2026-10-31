@@ -46,17 +46,17 @@ node_appmodel -->|"defines loader"| node_loader
 node_loader -->|"uses repository"| node_loaderrepo
 node_loaderrepo -.->|"accesses database"| node_oracle
 
-click node_appmodel "https://github.com/jurgenei/example-lineage-plsql/tree/main/2-application/src/main"
-click node_loader "https://github.com/jurgenei/example-lineage-plsql/blob/main/2-application/src/main/java/name/jurgenei/example/lineage/LineageLoaderService.java"
-click node_loaderrepo "https://github.com/jurgenei/example-lineage-plsql/blob/main/2-application/src/main/java/name/jurgenei/example/lineage/LineageLoaderRepository.java"
-click node_architecture "https://github.com/jurgenei/example-lineage-plsql/tree/main/1-architecture/src/main/resources"
-click node_lineagegen "https://github.com/jurgenei/example-lineage-plsql/tree/main/3-lineage/src/main/resources"
-click node_lineageout "https://github.com/jurgenei/example-lineage-plsql/tree/main/3-lineage/src/main/resources"
-click node_graphclient "https://github.com/jurgenei/example-lineage-plsql/tree/main/4-knowledge-graph/src/main/java"
-click node_graphcontainer "https://github.com/jurgenei/example-lineage-plsql/tree/main/4-knowledge-graph/src/main/resources/stub"
-click node_verify "https://github.com/jurgenei/example-lineage-plsql/tree/main/4-knowledge-graph"
-click node_rootflow "https://github.com/jurgenei/example-lineage-plsql/blob/main/build.gradle"
-click node_reports "https://github.com/jurgenei/example-lineage-plsql/blob/main/build.gradle"
+click node_appmodel "https://github.com/flowdigger/example-lineage-plsql/tree/main/2-application/src/main"
+click node_loader "https://github.com/flowdigger/example-lineage-plsql/blob/main/2-application/src/main/java/name/flowdigger/example/lineage/LineageLoaderService.java"
+click node_loaderrepo "https://github.com/flowdigger/example-lineage-plsql/blob/main/2-application/src/main/java/name/flowdigger/example/lineage/LineageLoaderRepository.java"
+click node_architecture "https://github.com/flowdigger/example-lineage-plsql/tree/main/1-architecture/src/main/resources"
+click node_lineagegen "https://github.com/flowdigger/example-lineage-plsql/tree/main/3-lineage/src/main/resources"
+click node_lineageout "https://github.com/flowdigger/example-lineage-plsql/tree/main/3-lineage/src/main/resources"
+click node_graphclient "https://github.com/flowdigger/example-lineage-plsql/tree/main/4-knowledge-graph/src/main/java"
+click node_graphcontainer "https://github.com/flowdigger/example-lineage-plsql/tree/main/4-knowledge-graph/src/main/resources/stub"
+click node_verify "https://github.com/flowdigger/example-lineage-plsql/tree/main/4-knowledge-graph"
+click node_rootflow "https://github.com/flowdigger/example-lineage-plsql/blob/main/build.gradle"
+click node_reports "https://github.com/flowdigger/example-lineage-plsql/blob/main/build.gradle"
 
 classDef toneNeutral fill:#f8fafc,stroke:#334155,stroke-width:1.5px,color:#0f172a
 classDef toneBlue fill:#dbeafe,stroke:#2563eb,stroke-width:1.5px,color:#172554

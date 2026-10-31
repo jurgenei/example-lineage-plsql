@@ -1,4 +1,4 @@
-package name.jurgenei.example.lineage;
+package org.flowdigger.example.lineage;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;

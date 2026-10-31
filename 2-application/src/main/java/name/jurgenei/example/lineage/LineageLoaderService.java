@@ -1,4 +1,4 @@
-package name.jurgenei.example.lineage;
+package org.flowdigger.example.lineage;
 
 import org.springframework.stereotype.Service;
 

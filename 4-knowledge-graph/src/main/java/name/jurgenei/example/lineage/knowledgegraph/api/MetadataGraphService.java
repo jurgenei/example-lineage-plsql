@@ -1,4 +1,4 @@
-package name.jurgenei.example.lineage.knowledgegraph.api;
+package org.flowdigger.example.lineage.knowledgegraph.api;
 
 import jakarta.annotation.PostConstruct;
 import java.time.Instant;

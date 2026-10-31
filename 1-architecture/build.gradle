@@ -1,7 +1,7 @@
 plugins {
     id 'base'
-    id 'name.jurgenei.gradle.archi' version '0.1.10'
-    id 'name.jurgenei.gradle.xml' version '0.1.11'
+    id 'org.flowdigger.gradle.archi' version '0.1.10'
+    id 'org.flowdigger.gradle.xml' version '0.1.11'
 }
 
 group =  rootProject.group
@@ -22,7 +22,7 @@ archi {
     env 'EXPORT_DIR', archiExportDir.get().asFile
 }
 
-tasks.register('transformArchiModel', name.jurgenei.gradle.xml.XsltTask) {
+tasks.register('transformArchiModel', org.flowdigger.gradle.xml.XsltTask) {
     group = 'lineage'
     description = 'Transforms Archi Open Exchange export to normalized model XML.'
     dependsOn tasks.named('archi')

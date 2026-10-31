@@ -1,4 +1,4 @@
-package name.jurgenei.example.lineage.knowledgegraph;
+package org.flowdigger.example.lineage.knowledgegraph;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

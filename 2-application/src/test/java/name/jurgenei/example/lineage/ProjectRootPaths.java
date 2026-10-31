@@ -1,4 +1,4 @@
-package name.jurgenei.example.lineage;
+package org.flowdigger.example.lineage;
 
 import java.nio.file.Files;
 import java.nio.file.Path;

@@ -1,4 +1,4 @@
-package name.jurgenei.example.lineage;
+package org.flowdigger.example.lineage;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -14,8 +14,8 @@ class GrowthCrossModuleContractTest {
         Path root = ProjectRootPaths.root();
         String architectureBuild = Files.readString(root.resolve(Path.of("1-architecture", "build.gradle")), StandardCharsets.UTF_8);
         assertThat(architectureBuild).contains("assembleArchitectureModel");
-        assertThat(architectureBuild).contains("name.jurgenei.gradle.archi");
-        assertThat(architectureBuild).contains("name.jurgenei.gradle.xml");
+        assertThat(architectureBuild).contains("org.flowdigger.gradle.archi");
+        assertThat(architectureBuild).contains("org.flowdigger.gradle.xml");
         assertThat(architectureBuild).contains("test-lineage.export.xml");
         assertThat(architectureBuild).contains("test-lineage.sexpr");
         assertThat(architectureBuild).contains("test-lineage.xlsx");

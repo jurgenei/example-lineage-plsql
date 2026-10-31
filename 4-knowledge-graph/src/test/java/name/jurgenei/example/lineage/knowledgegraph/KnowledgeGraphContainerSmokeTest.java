@@ -1,4 +1,4 @@
-package name.jurgenei.example.lineage.knowledgegraph;
+package org.flowdigger.example.lineage.knowledgegraph;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
