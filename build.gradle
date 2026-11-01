@@ -2,13 +2,15 @@ plugins {
     id 'base'
     id 'org.owasp.dependencycheck' version '13.0.0' apply false
     id 'com.github.spotbugs' version '6.5.11' apply false
-    id 'name.jurgenei.gradle.archi' version '0.1.10' apply false
-    id 'name.jurgenei.gradle.xml' version '0.1.13' apply false
-    id 'name.jurgenei.gradle.antlr.plsql' version '0.1.5' apply false
+
+    // Data lineage plugin publishing
+    id 'org.flowdigger.gradle.archi' version '0.1.10' apply false
+    id 'org.flowdigger.gradle.xml' version '0.1.13' apply false
+    id 'org.flowdigger.gradle.antlr.plsql' version '0.1.7' apply false
 }
 
 version = '0.1.5'
-group = 'name.jurgenei.example.lineage.plsql'
+group = 'org.flowdigger.example.lineage.plsql'
 
 allprojects {
     repositories {

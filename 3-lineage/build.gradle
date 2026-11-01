@@ -1,14 +1,14 @@
 plugins {
     id 'base'
-    id 'name.jurgenei.gradle.antlr.plsql'
-    id 'name.jurgenei.gradle.xml'
+    id 'org.flowdigger.gradle.antlr.plsql'
+    id 'org.flowdigger.gradle.xml'
 }
 
 group =  rootProject.group
 version = rootProject.version
 
-import name.jurgenei.gradle.antlr.XmlAstPlsqlGradleTask
-import name.jurgenei.gradle.xml.XsltTask
+import org.flowdigger.gradle.antlr.XmlAstPlsqlGradleTask
+import org.flowdigger.gradle.xml.XsltTask
 
 def configureParTask = { Object t ->
     t.executionModel.set('VIRTUAL_THREADS')
